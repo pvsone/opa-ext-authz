@@ -83,4 +83,4 @@ curl --user bob:password localhost:5000/finance/salary/charlie
 
 ### 7. Review the Decisions in Styra DAS
 
-After OPA evaluates the query made via the demo web app, the OPA will send a log of the decision to Styra DAS.  You can view them under the `System` -> `Decisions` tab.
+OPA will evaluate each authorization query from the demo web app, and return to it the result. Based on the Styra DAS configuration, the OPA will also send a log of the decision to Styra DAS. You can view each log entry under the `System` -> `Decisions` tab.
