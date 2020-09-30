@@ -16,7 +16,7 @@ This tutorial requires [Docker Compose](https://docs.docker.com/compose/install/
 
 ### 1. Create a Custom System in Styra DAS
 
-Refer to the Styra DAS documentation for detailed instructions on how to create a new System within your DAS environment.
+Refer to the Styra DAS documentation for detailed instructions on how to create a new System within your DAS environment, using the "Custom" System type.
 
 ### 2. Download the Styra DAS configuration for OPA
 
