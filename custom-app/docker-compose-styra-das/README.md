@@ -47,7 +47,7 @@ The following modifications were made to the `docker-compose.yaml` file as compa
 
 The following modifications were made to the `rules.rego` policy file as compared to the `example.rego` file in original tutorial:
 1. The package was renamed from `httpapi.authz` to `rules`.  While Styra DAS supports any user-defined package names and policy file structure, the default package for a custom system is `rules`, so for simplicity we have renamed the package to fit the default. The package name change is the reason we modified the `POLICY_PATH` variable above to the new path `/v1/data/rules`
-2. The `subordinates` data was moved into the file `dataset.json` to separate the external data from the policy.  A statement was added to `import data.dataset` into the rules, and the reference within the file to the `subordinates` data is now qualified under `dataset`, e.g. `dataset.subordinates[...` 
+2. The `subordinates` data was moved into the file `dataset.json` to separate the data from the policy.  A statement was added to `import data.dataset` into the rules, and the reference within the file to the `subordinates` data is now qualified under `dataset`, e.g. `dataset.subordinates[...` 
 
 Upon publishing the dataset and the rules, Styra DAS will construct a new policy [Bundle](https://www.openpolicyagent.org/docs/latest/management/#bundles) that will be distributed to the running OPA.
 
