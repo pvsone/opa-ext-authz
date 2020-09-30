@@ -10,7 +10,7 @@ Additionally, we will use Styra DAS to configure the OPA instance, publish and d
 
 ## Prerequisites
 
-This tutorial requires a [Docker Compose](https://docs.docker.com/compose/install/).
+This tutorial requires [Docker Compose](https://docs.docker.com/compose/install/).
 
 ## Steps
 
