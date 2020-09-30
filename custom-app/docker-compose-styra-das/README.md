@@ -22,7 +22,7 @@ Refer to the Styra DAS documentation for detailed instructions on how to create 
 
 Upon system creation, you will be redirected to the `System` -> `Settings` -> `Install` page.
 
-Copy the provided curl command under the heading `# Download Styra configuration for OPA` and run the command from a terminal within the same directory as this README file.
+* **Copy** the provided curl command under the heading `# Download Styra configuration for OPA` and run the command from a terminal within the same directory as this README file.
 
 ### 3. Bootstrap the tutorial environment using Docker Compose.
 
@@ -39,9 +39,9 @@ The following modifications were made to the `docker-compose.yaml` file as compa
 
 ### 4. Load the Policy and Data into Styra DAS
 
-Copy the contents of the `dataset.json` file in this directory, and paste into the `dataset` for the system in the Styra DAS UI. Click the Publish icon in the UI to save the change to the dataset.
+* **Copy** the contents of the `dataset.json` file in this directory, and paste into the `dataset` for the system in the Styra DAS UI. Click the **Publish** icon in the UI to save the change to the dataset.
 
-Copy the contents of the `rules.rego` file in this directory, and paste into the `rules/rules.rego` for the system in the Styra DAS UI.  Click the Publish icon in the UI to save the change to the rules.
+* **Copy** the contents of the `rules.rego` file in this directory, and paste into the `rules/rules.rego` for the system in the Styra DAS UI.  Click the **Publish** icon in the UI to save the change to the rules.
 
 The following modifications were made to the `rules.rego` policy file as compared to the `example.rego` file in original tutorial:
 1. The package was renamed from `httpapi.authz` to `rules`.  While Styra DAS supports any user-defined package names and policy file structure, the default package for a custom system is `rules`, so for simplicity we have renamed the package to fit the default. The package name change is the reason we modified the `POLICY_PATH` variable above to the new path `/v1/data/rules`
