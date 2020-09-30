@@ -24,6 +24,8 @@ Upon system creation, you will be redirected to the `System` -> `Settings` -> `I
 
 * **Copy** the provided curl command under the heading `# Download Styra configuration for OPA` and run the command from a terminal within the same directory as this README file.
 
+The file `opa-conf.yaml` will be downloaded from Styra DAS to the current directory
+
 ### 3. Bootstrap the tutorial environment using Docker Compose.
 
 Run OPA and the demo web app using the `docker-compose.yaml` file provided in this directory.
