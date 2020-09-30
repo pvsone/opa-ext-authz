@@ -1,0 +1,73 @@
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: example-app
+  labels:
+    app: example-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: example-app
+  template:
+    metadata:
+      labels:
+        app: example-app
+    spec:
+      containers:
+      - name: app
+        image: openpolicyagent/demo-restful-api:0.2
+        ports:
+        - containerPort: 5000
+        env:
+        - name: OPA_ADDR
+          value: http://localhost:8181
+        - name: POLICY_PATH
+          value: /v1/data/httpapi/authz
+      - name: opa
+        image: openpolicyagent/opa:latest
+        ports:
+        - containerPort: 8181
+        args:
+        - "run"
+        - "--ignore=.*"  # exclude hidden dirs created by Kubernetes
+        - "--server"
+        - "--log-format=json-pretty"
+        - "--set=decision_logs.console=true"
+        - "/policy/example.rego"
+        livenessProbe:
+          httpGet:
+            path: /health
+            scheme: HTTP
+            port: 8181
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /health
+            scheme: HTTP
+            port: 8181
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        volumeMounts:
+        - readOnly: true
+          mountPath: /policy
+          name: opa-policy
+      volumes:
+        - name: opa-policy
+          configMap:
+            name: opa-policy
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: example-app-service
+spec:
+  ports:
+  - port: 5000
+    protocol: TCP
+    targetPort: 5000
+  selector:
+    app: example-app
+  type: NodePort
