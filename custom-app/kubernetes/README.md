@@ -46,7 +46,7 @@ export SERVICE_URL=$SERVICE_HOST:$SERVICE_PORT
 echo $SERVICE_URL
 ```
 
-* Note: If the `SERVICE_URL` value is not generated properly, or doesn't allow access to the app during testing below, consult [Accessing apps](https://minikube.sigs.k8s.io/docs/handbook/accessing/) documentation for guidance on accessing the application for your minikube version / environment.
+* Note: If the `SERVICE_URL` value is not generated properly, or doesn't allow access to the app during testing below, consult minikube's [Accessing apps](https://minikube.sigs.k8s.io/docs/handbook/accessing/) documentation for guidance on accessing the application for your minikube configuration.
 
 ### 4. Exercise the OPA policy
 
