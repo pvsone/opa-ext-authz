@@ -41,9 +41,9 @@ The following modifications were made to the `docker-compose.yaml` file as compa
 
 ### 4. Load the Policy and Data into Styra DAS
 
-* **Copy** the contents of the `dataset.json` file in this directory, and paste into the `dataset` for the system in the Styra DAS UI. Click the **Publish** icon in the UI to save the change to the dataset.
+* **Copy** the contents of the `dataset.json` file in this directory, and paste into the `dataset` for the system in the Styra DAS UI. (Replace all existing content in the `dataset`) Click the **Publish** icon in the UI to save the change to the dataset.
 
-* **Copy** the contents of the `rules.rego` file in this directory, and paste into the `rules/rules.rego` for the system in the Styra DAS UI.  Click the **Publish** icon in the UI to save the change to the rules.
+* **Copy** the contents of the `rules.rego` file in this directory, and paste into the `rules/rules.rego` for the system in the Styra DAS UI.  (Replace all existing content currently in `rules.rego`) Click the **Publish** icon in the UI to save the change to the rules.
 
 The following modifications were made to the `rules.rego` policy file as compared to the `example.rego` file in original tutorial:
 1. The package was renamed from `httpapi.authz` to `rules`.  While Styra DAS supports any user-defined package names and policy file structure, the default package for a custom system is `rules`, so for simplicity we have renamed the package to fit the default. The package name change is the reason we modified the `POLICY_PATH` variable above to the new path `/v1/data/rules`
