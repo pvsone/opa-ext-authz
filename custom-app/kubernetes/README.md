@@ -1,6 +1,6 @@
 # Custom Application with Kubernetes
 
-Run the [OPA HTTP API Authorization](https://www.openpolicyagent.org/docs/latest/http-api-authorization/) tutorial using Kubernetes
+A variant of the [OPA HTTP API Authorization](https://www.openpolicyagent.org/docs/latest/http-api-authorization/) tutorial using Kubernetes
 
 ## Goals
 
