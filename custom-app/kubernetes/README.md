@@ -4,9 +4,11 @@ A variant of the [OPA HTTP API Authorization](https://www.openpolicyagent.org/do
 
 ## Goals
 
-It is recommended that you read through and run the [OPA HTTP API Authorization](https://www.openpolicyagent.org/docs/latest/http-api-authorization/) tutorial as documented (using Docker Compose) prior to running this version on Kubernetes.
+The core goals are the same as those detailed in the official tutorial [Goals](https://www.openpolicyagent.org/docs/latest/http-api-authorization/#goals)
 
-This tutorial is an abridged version of the official tutorial, with a focus on deploying the application and policy to a Kubernetes environment. The original tutorial provides greater detail and description of the application and policy implementation and behavior.
+Additionally, we will use Kubernetes for the application runtime.
+
+This tutorial is an abridged version of the official tutorial, for additional detail and description of the application and policy code see the original tutorial.
 
 ## Prerequisites
 
@@ -20,7 +22,6 @@ This tutorial requires a Kubernetes cluster.  To run the tutorial locally, we re
 minikube start
 ```
 *  Note: On a mac, `minikube start --driver=hyperkit` is recommended for ease of use of the NodePort service type.
-
 
 ### 2. Define the OPA policy
 
