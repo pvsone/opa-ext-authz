@@ -8,6 +8,8 @@ The core goals are the same as those detailed in the official tutorial [Goals](h
 
 Additionally, we will use Styra DAS to configure the OPA instance, publish and distribute policies to the OPA, and receive and display the OPA decision logs.
 
+This tutorial is an abridged version of the official tutorial, for additional detail and description of the application and policy code see the original tutorial.
+
 ## Prerequisites
 
 This tutorial requires [Docker Compose](https://docs.docker.com/compose/install/).
@@ -58,6 +60,8 @@ Under the `System` -> `Settings` -> `Decision Mappings`, select the `Default` ma
 In the "Path to decision" field, update the value to `result.allow`.
 
 Save the change by clicking the `Update Mapping` button.
+
+Refer to the Styra DAS documentation for complete details on Decision Mappings configuration.
 
 ### 6. Exercise the OPA policy
 
