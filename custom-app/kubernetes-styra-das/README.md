@@ -1,6 +1,6 @@
 # Custom Application with Kubernetes and Styra DAS
 
-A variant of the [OPA HTTP API Authorization](https://www.openpolicyagent.org/docs/latest/http-api-authorization/) tutorial using Kubernetes, and using Styra DAS for OPA configuration, policy distribution and decision logging.
+A variant of the [OPA HTTP API Authorization](https://www.openpolicyagent.org/docs/latest/http-api-authorization/) tutorial using Kubernetes, and using Styra DAS as the OPA management control plane.
 
 ## Goals
 
