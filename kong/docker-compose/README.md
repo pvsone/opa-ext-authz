@@ -22,7 +22,7 @@ docker-compose up
 
 The `app` in the `docker-compose.yaml` file uses the same image (`openpolicyagent/demo-test-server:v1`) used in the [Envoy Authorization with OPA](https://www.openpolicyagent.org/docs/latest/envoy-authorization/) tutorial.
 
-The `opa` instance is started with the `policy.rego` file. This file has been modified slightly from the version in the [Envoy Authorization with OPA](https://www.openpolicyagent.org/docs/latest/envoy-authorization/#3-define-a-opa-policy) tutorial.
+The `opa` instance is started with the `policy.rego` file. This file has been modified slightly from the version in the [Envoy Authorization with OPA](https://www.openpolicyagent.org/docs/latest/envoy-authorization/#3-define-a-opa-policy) tutorial, specifically:
 * The `token` value is used as is, since the OPA Kong plugin decodes the token and provides the decoded payload as part of the `input` to the OPA authorization query.
 * In the `action_allowed` rule for the `POST` method, the expression which checked the `input.parsed_body` was removed.  The OPA Kong plugin does not pass the request body from Kong to OPA. The `input` fields that are currently provided are `token`, `method`, and `path`.
 * The package was renamed to `kong.authz`.
