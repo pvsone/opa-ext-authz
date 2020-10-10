@@ -68,4 +68,4 @@ export SERVICE_URL=localhost:8000
 
 Follow the instructions provided at https://www.openpolicyagent.org/docs/latest/envoy-authorization/#6-exercise-the-opa-policy
 
-*Note*: The check "that Bob cannot create an employee with the same firstname as himself", will not result in a 403 forbidden as in the original tutorial. This is due to the policy change described above - where the expression that relied on `input.parse_body` was removed.
+_**Note**_: The check "_that Bob cannot create an employee with the same firstname as himself_", will **not** result in a '403 Forbidden' as in the original tutorial. This is due to the policy change described above - where the expression that relied on `input.parse_body` was removed.
