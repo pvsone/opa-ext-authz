@@ -50,7 +50,7 @@ curl -i http://localhost:8001
 The following modifications were made to the `rules.rego` policy file as compared to the `policy.rego` file in original tutorial:
 1. The package was renamed from `envoy.authz` to `rules`.  While Styra DAS supports any user-defined package names and policy file structure, the default package for a custom system is `rules`, so for simplicity we have renamed the package to fit the default.
 2. The `token` value is used as is, since the OPA Kong plugin decodes the token and provides the decoded payload as part of the `input` to the OPA authorization query.
-* In the `action_allowed` rule for the `POST` method, the expression which checked the `input.parsed_body` was removed.  The OPA Kong plugin does not pass the request body from Kong to OPA. The `input` fields that are currently provided are `token`, `method`, and `path`.
+3. In the `action_allowed` rule for the `POST` method, the expression which checked the `input.parsed_body` was removed.  The OPA Kong plugin does not pass the request body from Kong to OPA. The `input` fields that are currently provided are `token`, `method`, and `path`.
 
 Upon publishing the dataset and the rules, Styra DAS will construct a new policy [Bundle](https://www.openpolicyagent.org/docs/latest/management/#bundles) that will be distributed to the running OPA.
 
