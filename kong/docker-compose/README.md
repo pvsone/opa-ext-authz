@@ -1,8 +1,10 @@
-# Kong
+# Kong with OPA on Docker Compose
 
 Run an OPA demo application with [Kong Gateway](https://konghq.com/kong/) and the [OPA Kong Plugin](https://github.com/open-policy-agent/contrib/tree/master/kong_api_authz) on Docker Compose.
 
-## Build a Docker image with Kong and the OPA Kong Plugin
+## Steps 
+
+### 1. Build a Docker image with Kong and the OPA Kong Plugin
 
 Download or clone the [open-policy-agent/contrib](https://github.com/open-policy-agent/contrib) repo.
 
@@ -13,7 +15,7 @@ cd kong_api_authz
 docker build . -t kong-opa:2.0
 ```
 
-## Run the App with Kong and OPA
+### 2. Run the App with Kong and OPA
 
 ```
 # within this repo's directory
@@ -27,12 +29,12 @@ The `opa` instance is started with the `policy.rego` file. This file has been mo
 * In the `action_allowed` rule for the `POST` method, the expression which checked the `input.parsed_body` was removed.  The OPA Kong plugin does not pass the request body from Kong to OPA. The `input` fields that are currently provided are `token`, `method`, and `path`.
 * The package was renamed to `kong.authz`.
 
-Verify Kong is running
+Open a second terminal and verify Kong is running
 ```
-curl -i http://localhost:8001/
+curl -i http://localhost:8001
 ```
 
-## Configure the Kong Service, Route and Plugin
+### 3. Configure the Kong Service, Route and Plugin
 
 Configure the Service
 ```
@@ -55,7 +57,7 @@ curl -i -X POST http://localhost:8001/plugins \
   --data config.policy.decision=kong/authz/allow
 ```
 
-## Exercise the OPA policy
+### 4. Exercise the OPA policy
 
 Set the `SERVICE_URL` environment variable to the service’s IP/port.
 
