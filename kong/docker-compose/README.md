@@ -33,19 +33,24 @@ curl -i http://localhost:8001/
 ```
 
 ## Configure the Kong Service, Route and Plugin
+
+Configure the Service
 ```
-# Configure the Service
 curl -i -X POST \
   http://localhost:8001/services \
   --data name=demo-app \
   --data url='http://app:8080'
+```
 
-# Configure the Route
+Configure the Route
+```
 curl -i -X POST \
   http://localhost:8001/services/demo-app/routes \
   --data 'paths[]=/'
+```
 
-# Configure the Plugin
+Configure the Plugin
+```
 curl -i -X POST \
   http://localhost:8001/plugins \
   --data name=opa \
