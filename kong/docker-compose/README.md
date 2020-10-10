@@ -36,23 +36,20 @@ curl -i http://localhost:8001/
 
 Configure the Service
 ```
-curl -i -X POST \
-  http://localhost:8001/services \
+curl -i -X POST http://localhost:8001/services \
   --data name=demo-app \
   --data url='http://app:8080'
 ```
 
 Configure the Route
 ```
-curl -i -X POST \
-  http://localhost:8001/services/demo-app/routes \
+curl -i -X POST http://localhost:8001/services/demo-app/routes \
   --data 'paths[]=/'
 ```
 
 Configure the Plugin
 ```
-curl -i -X POST \
-  http://localhost:8001/plugins \
+curl -i -X POST http://localhost:8001/plugins \
   --data name=opa \
   --data config.server.host=opa \
   --data config.policy.decision=kong/authz/allow
@@ -68,4 +65,4 @@ export SERVICE_URL=localhost:8000
 
 Follow the instructions provided at https://www.openpolicyagent.org/docs/latest/envoy-authorization/#6-exercise-the-opa-policy
 
-_**Note**_: The check "_that Bob cannot create an employee with the same firstname as himself_", will **not** result in a '403 Forbidden' as in the original tutorial. This is due to the policy change described above - where the expression that relied on `input.parse_body` was removed.
+_**Note**_: The check "_that Bob cannot create an employee with the same firstname as himself_", will **not** result in a '403 Forbidden' as in the original tutorial. This is due to the policy change described above - where the expression that relied on `input.parsed_body` was removed.
