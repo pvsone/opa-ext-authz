@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+
+  app:
+    build: ./demo-restful-api
+    environment:
+      - OPA_ADDR=http://opa:8181
+      - POLICY_PATH=/v1/data/policy/com.styra.envoy.app/main/main
+
+  envoy:
+    image: envoyproxy/envoy:v1.15.0
+    command:
+      - "envoy"
+      - "--config-path"
+      - "/config/envoy.yaml"
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./envoy.v3.yaml:/config/envoy.yaml
+
+  opa:
+    image: openpolicyagent/opa:0.23.2-envoy
+    command:
+      - "run"
+      - "--server"
+      - "--config-file=/config/opa-conf.yaml"
+    volumes:
+      - ./opa-conf.yaml:/config/opa-conf.yaml
