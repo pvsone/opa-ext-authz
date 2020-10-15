@@ -10,7 +10,7 @@ This tutorial requires [Docker Compose](https://docs.docker.com/compose/install/
 
 ### 1. Create an Envoy System in Styra DAS
 
-Refer to the Styra DAS documentation for detailed instructions on how to create a new System within your DAS environment, using the "Envoy" System type.
+Refer to the Styra DAS documentation for detailed instructions on how to create a new System within your DAS environment, using the `Envoy` System type.
 
 ### 2. Create the Styra DAS configuration for OPA
 
