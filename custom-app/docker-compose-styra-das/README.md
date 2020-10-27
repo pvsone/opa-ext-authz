@@ -59,6 +59,12 @@ Under the `System` -> `Settings` -> `Decision Mappings`, select the `Default` ma
 
 In the "Path to decision" field, update the value to `result.allow`.
 
+In the Columns section add the following:
+| Search key | Path to value |
+| ---------- | ------------- |
+| user       | input.user |
+| method     | input.method |
+
 Save the change by clicking the `Update Mapping` button.
 
 Refer to the Styra DAS documentation for complete details on Decision Mappings configuration.
