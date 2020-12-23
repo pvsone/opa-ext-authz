@@ -1,0 +1,28 @@
+type: ProxyTemplate
+mesh: default
+name: opa-ext-authz-filter
+selectors:
+  - match:
+      kuma.io/service: '*'
+conf:
+  imports:
+    - default-proxy
+  modifications:
+    - httpFilter:
+        operation: addBefore
+        match:
+          name: envoy.filters.http.router
+          origin: inbound
+        value: |
+          name: envoy.filters.http.ext_authz
+          typed_config:
+            "@type": type.googleapis.com/envoy.extensions.filters.http.ext_authz.v3.ExtAuthz
+            with_request_body:
+              max_request_bytes: 8192
+              allow_partial_message: true
+            failure_mode_allow: false
+            grpc_service:
+              google_grpc:
+                target_uri: 172.44.0.3:9191
+                stat_prefix: ext_authz
+              timeout: 0.5s

@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+
+  app:
+    image: openpolicyagent/demo-test-server:v1
+    expose:
+      - "8080"
+    networks:
+      example-net:
+        ipv4_address: 172.44.0.4
+
+  kuma-dp:
+    image: kong-docker-kuma-docker.bintray.io/kuma-dp:1.0.3
+    volumes:
+      - ./token-example-app:/token-example-app
+      - ./dataplane.yaml:/dataplane.yaml
+    ports:
+      - "10080:10080"
+    command:
+      - "run"
+      - "--name=example-app"
+      - "--mesh=default"
+      - "--cp-address=https://host.docker.internal:5678"
+      - "--dataplane-token-file=/token-example-app"
+      - "--dataplane-file=/dataplane.yaml"
+    networks:
+      example-net:
+        ipv4_address: 172.44.0.2
+
+  opa:
+    image: openpolicyagent/opa:0.25.2-envoy-5
+    command:
+      - "run"
+      - "--server"
+      - "--set=plugins.envoy_ext_authz_grpc.addr=:9191"
+      - "--set=decision_logs.console=true"
+      - "--log-level=debug"
+      - "--log-format=json-pretty"
+      - "/policy/policy.rego"
+    volumes:
+      - ./policy.rego:/policy/policy.rego
+    expose:
+      - "9191"
+    networks:
+      example-net:
+        ipv4_address: 172.44.0.3
+
+networks:
+  example-net:
+    ipam:
+      config:
+        - subnet: 172.44.0.0/16

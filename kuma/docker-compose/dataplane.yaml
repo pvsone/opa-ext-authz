@@ -1,0 +1,12 @@
+type: Dataplane
+mesh: default
+name: example-app
+networking: 
+  address: 172.44.0.2
+  inbound: 
+    - port: 10080
+      serviceAddress: 172.44.0.4
+      servicePort: 8080
+      tags: 
+        kuma.io/service: example-app
+        kuma.io/protocol: http
