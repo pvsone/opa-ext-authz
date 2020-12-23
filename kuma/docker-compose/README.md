@@ -6,7 +6,7 @@ Run the [OPA Envoy Authorization](https://www.openpolicyagent.org/docs/latest/en
 
 This tutorial requires [Kuma](https://kuma.io/install/1.0.3/) and [Docker Compose](https://docs.docker.com/compose/install/).
 
-_This tutorial has been tested with Kuma 1.0.3, Docker 20.10.0, Docker Compose 1,27.4 on a Mac_
+_This tutorial has been tested with Kuma 1.0.3, Docker 20.10.0, Docker Compose 1.27.4 on a Mac_
 
 ## Overview
 
