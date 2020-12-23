@@ -1,6 +1,6 @@
 # Kuma with OPA on Docker Compose
 
-Run the [OPA Envoy Authorization](https://www.openpolicyagent.org/docs/latest/envoy-authorization/) tutorial using Docker Compose
+Run the [OPA Envoy Authorization](https://www.openpolicyagent.org/docs/latest/envoy-authorization/) tutorial using Kuma and Docker Compose
 
 ## Prerequisites
 
