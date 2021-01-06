@@ -13,6 +13,8 @@ spec:
       app: example-app
   template:
     metadata:
+      annotations:
+        kuma.io/virtual-probes: disabled
       labels:
         app: example-app
     spec:
@@ -22,7 +24,7 @@ spec:
           ports:
             - containerPort: 8080
         - name: opa
-          image: openpolicyagent/opa:latest-envoy
+          image: openpolicyagent/opa:0.25.2-envoy-5
           volumeMounts:
           - readOnly: true
             mountPath: /policy
@@ -65,7 +67,8 @@ metadata:
     8080.service.kuma.io/protocol: "http"
 spec:
   ports:
-  - port: 8080
+  - name: http
+    port: 8080
     protocol: TCP
     targetPort: 8080
   selector:

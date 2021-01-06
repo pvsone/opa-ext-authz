@@ -7,7 +7,7 @@ metadata:
 spec:
   selectors:
     - match:
-        kuma.io/service: "*"
+        kuma.io/service: '*'
   conf:
     imports:
       - default-proxy
@@ -15,12 +15,12 @@ spec:
       - httpFilter:
           operation: addBefore
           match:
-            name: envoy.router
+            name: envoy.filters.http.router
             origin: inbound
           value: |
-            name: envoy.ext_authz
+            name: envoy.filters.http.ext_authz
             typed_config:
-              "@type": type.googleapis.com/envoy.config.filter.http.ext_authz.v2.ExtAuthz
+              "@type": type.googleapis.com/envoy.extensions.filters.http.ext_authz.v3.ExtAuthz
               with_request_body:
                 max_request_bytes: 8192
                 allow_partial_message: true

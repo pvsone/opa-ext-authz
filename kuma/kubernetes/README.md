@@ -4,9 +4,9 @@ Run the [OPA Envoy Authorization](https://www.openpolicyagent.org/docs/latest/en
 
 ## Prerequisites
 
-A Kubernetes cluster with Kuma [installed](https://kuma.io/docs/0.7.3/installation/kubernetes/)
+A Kubernetes cluster with Kuma [installed](https://kuma.io/docs/1.0.3/installation/kubernetes/)
 
-_This tutorial has been tested with Kubernetes 1.18.9 and Kuma 0.7.3_
+_This tutorial has been tested with Kubernetes 1.18.9 and Kuma 1.0.3_
 
 ## Steps
 
@@ -28,7 +28,7 @@ kubectl create secret generic opa-policy --from-file policy.rego -n kuma-opa-dem
 
 The `example-app.yaml` includes both a `Deployment` with the `example-app` and `opa` sidecar, as well as the `example-app-service` `Service`
 * _The `kuma-dp` sidecar will be automatically injected_
-* In order to add an `httpFilter` via the [`ProxyTemplate`](https://kuma.io/docs/0.7.3/policies/proxy-template/#http-filter) (_in **Step 5.** below_), the `Service` must be annotated with `<port>.service.kuma.io/protocol: http` as described in [Protocol support in Kuma](https://kuma.io/docs/0.7.3/policies/protocol-support-in-kuma/)
+* In order to add an `httpFilter` via the [`ProxyTemplate`](https://kuma.io/docs/1.0.3/policies/proxy-template/#http-filter) (_in **Step 5.** below_), the `Service` must be annotated with `<port>.service.kuma.io/protocol: http` as described in [Protocol support in Kuma](https://kuma.io/docs/1.0.3/policies/protocol-support-in-kuma/)
 
 ```
 kubectl apply -f example-app.yaml
@@ -38,7 +38,7 @@ Set the `SERVICE_URL` environment variable to the service’s IP/port.
 
 **minikube:**
 ```
-export SERVICE_PORT=$(kubectl get service example-app-service -o jsonpath='{.spec.ports[?(@.port==8080)].nodePort}')
+export SERVICE_PORT=$(kubectl -n kuma-opa-demo get service example-app-service -o jsonpath='{.spec.ports[?(@.port==8080)].nodePort}')
 export SERVICE_HOST=$(minikube ip)
 export SERVICE_URL=$SERVICE_HOST:$SERVICE_PORT
 echo $SERVICE_URL
