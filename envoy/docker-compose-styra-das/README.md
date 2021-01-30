@@ -1,6 +1,6 @@
 # Envoy with OPA on Docker Compose and Styra DAS
 
-Run an OPA demo application with [Envoy](https://www.envoyproxy.io/docs/envoy/v1.15.0/intro/what_is_envoy) and the [OPA Envoy Plugin](https://github.com/open-policy-agent/opa-envoy-plugin) on Docker Compose, and using Styra DAS as the OPA management control plane.
+Run an OPA demo application with [Envoy](https://www.envoyproxy.io/docs/envoy/v1.17.0/intro/what_is_envoy) and the [OPA Envoy Plugin](https://github.com/open-policy-agent/opa-envoy-plugin) on Docker Compose, and using Styra DAS as the OPA management control plane.
 
 ## Prerequisites
 
@@ -32,7 +32,7 @@ docker-compose up
 
 The `app` in the `docker-compose.yaml` file is based on the [`open-policy-agent/contrib/api-authz`](https://github.com/open-policy-agent/contrib/tree/master/api_authz) example.
 
-The `envoy` instances is started with the `envoy.v3.yaml` configuration file.  An example using the v2 APIs is also provided in `envoy.v2.yaml`.
+The `envoy` instances is started with the `envoy.yaml` configuration file.
 
 The `opa` instance is started with the `opa-conf.yaml` configuration file. It will use this configuration to communicate with Styra DAS to pull configuration and bundles, and to push decision logs.
 

@@ -9,7 +9,7 @@ services:
       - POLICY_PATH=/v1/data/policy/com.styra.envoy.app/main/main
 
   envoy:
-    image: envoyproxy/envoy:v1.15.0
+    image: envoyproxy/envoy:v1.17.0
     command:
       - "envoy"
       - "--config-path"
@@ -17,10 +17,10 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./envoy.v3.yaml:/config/envoy.yaml
+      - ./envoy.yaml:/config/envoy.yaml
 
   opa:
-    image: openpolicyagent/opa:0.23.2-envoy
+    image: openpolicyagent/opa:0.26.0-envoy-1
     command:
       - "run"
       - "--server"
