@@ -11,7 +11,7 @@ services:
         ipv4_address: 172.44.0.4
 
   kuma-dp:
-    image: kong-docker-kuma-docker.bintray.io/kuma-dp:1.0.3
+    image: kong-docker-kuma-docker.bintray.io/kuma-dp:1.0.6
     volumes:
       - ./token-example-app:/token-example-app
       - ./dataplane.yaml:/dataplane.yaml
@@ -29,7 +29,7 @@ services:
         ipv4_address: 172.44.0.2
 
   opa:
-    image: openpolicyagent/opa:0.25.2-envoy-5
+    image: openpolicyagent/opa:0.26.0-envoy-1
     command:
       - "run"
       - "--server"

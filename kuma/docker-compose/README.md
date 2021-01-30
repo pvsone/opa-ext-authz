@@ -4,13 +4,13 @@ Run the [OPA Envoy Authorization](https://www.openpolicyagent.org/docs/latest/en
 
 ## Prerequisites
 
-This tutorial requires [Kuma](https://kuma.io/install/1.0.3/) and [Docker Compose](https://docs.docker.com/compose/install/).
+This tutorial requires [Kuma](https://kuma.io/install/1.0.6/) and [Docker Compose](https://docs.docker.com/compose/install/).
 
-_This tutorial has been tested with Kuma 1.0.3, Docker 20.10.0, Docker Compose 1.27.4 on a Mac_
+_This tutorial has been tested with Kuma 1.0.6_
 
 ## Overview
 
-In this example, Kuma will be run in [Universal mode](https://kuma.io/docs/1.0.3/documentation/overview/#universal-mode). The Kuma Control Plane will be run directly on the user workstation host (Mac or Linux), while the Kuma Data Plane, OPA, and Application will be run as containers via Docker Compose.
+In this example, Kuma will be run in [Universal mode](https://kuma.io/docs/1.0.6/documentation/overview/#universal-mode). The Kuma Control Plane will be run directly on the user workstation host (Mac or Linux), while the Kuma Data Plane, OPA, and Application will be run as containers via Docker Compose.
 
 ## Steps
 
@@ -54,7 +54,7 @@ kumactl generate dataplane-token --name=example-app > token-example-app
 
 C. Configure Envoy to use OPA for external authz via the Kuma `ProxyTemplate`
 ```
-kumactl apply -f proxytemplate.yaml
+kumactl apply -f proxy-template.yaml
 ```
 
 ## 3. Run the App with OPA and Kuma-Dataplane sidecars

@@ -4,13 +4,15 @@ Run the [OPA Envoy Authorization](https://www.openpolicyagent.org/docs/latest/en
 
 ## Prerequisites
 
-A Kubernetes cluster with Kuma [installed](https://kuma.io/docs/1.0.3/installation/kubernetes/)
+A Kubernetes cluster with Kuma [installed](https://kuma.io/docs/1.0.6/installation/kubernetes/)
 
-_This tutorial has been tested with Kubernetes 1.18.9 and Kuma 1.0.3_
+_This tutorial has been tested with Kuma 1.0.6_
 
 ## Steps
 
 ### 1. Start Minikube
+
+[Install](https://kuma.io/docs/1.0.6/installation/kubernetes/) the Kuma Control Plane (if not already installed)
 
 ### 2. Create the `kuma-opa-demo` namespace with kuma sidecar-injection enabled
 
@@ -28,7 +30,7 @@ kubectl create secret generic opa-policy --from-file policy.rego -n kuma-opa-dem
 
 The `example-app.yaml` includes both a `Deployment` with the `example-app` and `opa` sidecar, as well as the `example-app-service` `Service`
 * _The `kuma-dp` sidecar will be automatically injected_
-* In order to add an `httpFilter` via the [`ProxyTemplate`](https://kuma.io/docs/1.0.3/policies/proxy-template/#http-filter) (_in **Step 5.** below_), the `Service` must be annotated with `<port>.service.kuma.io/protocol: http` as described in [Protocol support in Kuma](https://kuma.io/docs/1.0.3/policies/protocol-support-in-kuma/)
+* In order to add an `httpFilter` via the [`ProxyTemplate`](https://kuma.io/docs/1.0.6/policies/proxy-template/#http-filter) (_in **Step 5.** below_), the `Service` must be annotated with `<port>.service.kuma.io/protocol: http` as described in [Protocol support in Kuma](https://kuma.io/docs/1.0.6/policies/protocol-support-in-kuma/)
 
 ```
 kubectl apply -f example-app.yaml
