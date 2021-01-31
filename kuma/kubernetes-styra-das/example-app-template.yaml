@@ -1,0 +1,95 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: opa-envoy-config
+  namespace: kuma-opa-demo
+data:
+  conf.yaml: |
+    services:
+      - name: styra
+        url: https://<styra-organization-id>/v1
+        credentials:
+          bearer:
+            token: "<styra-token>"
+    labels:
+      system-id: "<styra-system-id>"
+      system-type: "envoy"
+    discovery:
+      name: discovery
+      prefix: "<styra-system-id>"
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: example-app
+  namespace: kuma-opa-demo
+  labels:
+    app: example-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: example-app
+  template:
+    metadata:
+      annotations:
+        kuma.io/virtual-probes: disabled
+      labels:
+        app: example-app
+    spec:
+      containers:
+        - name: app
+          image: pvsone/demo-restful-api:0.3
+          ports:
+            - containerPort: 5000
+          env:
+          - name: POLICY_PATH
+            value: /v1/data/policy/com.styra.envoy.app/main/main
+        - name: opa
+          image: openpolicyagent/opa:0.26.0-envoy-1
+          volumeMounts:
+          - readOnly: true
+            mountPath: /config
+            name: opa-config-vol
+          args:
+          - "run"
+          - "--server"
+          - "--addr=localhost:8181"
+          - "--diagnostic-addr=0.0.0.0:8282"
+          - "--ignore=.*"
+          - "--config-file=/config/conf.yaml"
+          livenessProbe:
+            httpGet:
+              path: /health?plugins
+              scheme: HTTP
+              port: 8282
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /health?plugins
+              scheme: HTTP
+              port: 8282
+            initialDelaySeconds: 5
+            periodSeconds: 5
+      volumes:
+      - name: opa-config-vol
+        configMap:
+          name: opa-envoy-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: example-app-service
+  namespace: kuma-opa-demo
+  annotations:
+    5000.service.kuma.io/protocol: "http"
+spec:
+  ports:
+  - name: http
+    port: 5000
+    protocol: TCP
+    targetPort: 5000
+  selector:
+    app: example-app
+  type: NodePort
