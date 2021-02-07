@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: istio-opa-demo
+  namespace: istio-opa-demo
+  labels:
+    istio-injection: enabled
