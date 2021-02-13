@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+
+  app:
+    image: spring-opa-app:0.0.1
+    ports:
+      - 8080:8080
+    environment:
+      - OPA_ADDR=http://opa:8181
+      - POLICY_PATH=/v1/data/rules/main
+
+  opa:
+    image: openpolicyagent/opa:latest
+    ports:
+      - 8181:8181
+    volumes:
+      - ./policy.rego:/policy/policy.rego
+    command:
+      - "run"
+      - "--server"
+      - "--set=decision_logs.console=true"
+      - "--log-format=json-pretty"
+      - "/policy/policy.rego"

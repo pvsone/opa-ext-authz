@@ -1,0 +1,3 @@
+opa:
+  url: ${OPA_ADDR:http://localhost:8181}
+  path: ${POLICY_PATH:/v1/data/rules/main}
