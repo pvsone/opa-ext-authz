@@ -1,0 +1,15 @@
+applications:
+  - name: spring-opa-app
+    disk_quota: 1G
+    instances: 1
+    memory: 1G
+    path: ./spring-opa-app-0.0.1.jar
+    buildpacks:
+    - java_buildpack
+    env:
+      JBP_CONFIG_OPEN_JDK_JRE: '{ jre: { version: 11.+ } }'
+    sidecars:
+      - name: opa
+        process_types: [ 'web']
+        command: './opa run -s -c ./opa-conf.yaml'
+        memory: 256MB

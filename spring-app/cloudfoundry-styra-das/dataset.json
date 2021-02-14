@@ -1,0 +1,12 @@
+{
+  "subordinates": {
+    "alice": [],
+    "betty": [
+      "charlie"
+    ],
+    "bob": [
+      "alice"
+    ],
+    "charlie": []
+  }
+}
