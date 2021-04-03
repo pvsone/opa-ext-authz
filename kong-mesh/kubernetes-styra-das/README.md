@@ -1,6 +1,6 @@
 # Kong Mesh with OPA on Kubernetes and Styra DAS
 
-Run an OPA demo application with [Kong Mesh](https://docs.konghq.com/mesh/) and the [OPA Envoy Plugin](https://github.com/open-policy-agent/opa-envoy-plugin) on Kubernetes, and using Styra DAS as the OPA management control plane.
+Run an OPA demo application with [Kong Mesh](https://docs.konghq.com/mesh/) and it's embedded [OPA Envoy Plugin](https://github.com/open-policy-agent/opa-envoy-plugin) on Kubernetes, and using Styra DAS as the OPA management control plane.
 
 ## Prerequisites
 
