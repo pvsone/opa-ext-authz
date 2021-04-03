@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: kmesh-opa-demo
+  namespace: kmesh-opa-demo
+  annotations:
+    kuma.io/sidecar-injection: enabled

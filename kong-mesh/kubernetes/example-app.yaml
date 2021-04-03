@@ -1,0 +1,40 @@
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: example-app
+  namespace: kmesh-opa-demo
+  labels:
+    app: example-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: example-app
+  template:
+    metadata:
+      labels:
+        app: example-app
+    spec:
+      containers:
+        - name: app
+          image: openpolicyagent/demo-test-server:v1
+          ports:
+            - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: example-app-service
+  namespace: kmesh-opa-demo
+  annotations:
+    8080.service.kuma.io/protocol: "http"
+spec:
+  ports:
+  - name: http
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: example-app
+  type: NodePort

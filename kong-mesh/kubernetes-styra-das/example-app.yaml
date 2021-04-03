@@ -1,0 +1,43 @@
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: example-app
+  namespace: kmesh-opa-demo
+  labels:
+    app: example-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: example-app
+  template:
+    metadata:
+      labels:
+        app: example-app
+    spec:
+      containers:
+        - name: app
+          image: pvsone/demo-restful-api:0.3
+          ports:
+            - containerPort: 5000
+          env:
+          - name: POLICY_PATH
+            value: /v1/data/policy/com.styra.envoy.app/main/main
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: example-app-service
+  namespace: kmesh-opa-demo
+  annotations:
+    5000.service.kuma.io/protocol: "http"
+spec:
+  ports:
+  - name: http
+    port: 5000
+    protocol: TCP
+    targetPort: 5000
+  selector:
+    app: example-app
+  type: NodePort
