@@ -1,4 +1,4 @@
-# Kong with OPA on Docker Compose and Styra DAS
+# Kong Gateway with OPA on Docker Compose and Styra DAS
 
 Run an OPA demo application with [Kong Gateway](https://konghq.com/kong/) and the [OPA Kong Plugin](https://github.com/open-policy-agent/contrib/tree/master/kong_api_authz) on Docker Compose, and using Styra DAS as the OPA management control plane.
 
@@ -34,7 +34,7 @@ docker build . -t kong-opa:2.0
 docker-compose up
 ```
 
-The `app` in the `docker-compose.yaml` file uses the same image (`openpolicyagent/demo-test-server:v1`) used in the [Envoy Authorization with OPA](https://www.openpolicyagent.org/docs/latest/envoy-authorization/) tutorial.
+The `app` in the `docker-compose.yaml` file uses the same image (`openpolicyagent/demo-test-server:v1`) used in the [Envoy Authorization with OPA](https://www.openpolicyagent.org/docs/latest/envoy-introduction/) tutorial.
 
 The `opa` instance is started with the `opa-conf.yaml` configuration file. It will use this configuration to communicate with Styra DAS to pull configuration and bundles, and to push decision logs.
 
@@ -102,7 +102,7 @@ Set the `SERVICE_URL` environment variable to the service’s IP/port.
 export SERVICE_URL=localhost:8000
 ```
 
-Follow the instructions provided at https://www.openpolicyagent.org/docs/latest/envoy-authorization/#6-exercise-the-opa-policy
+Follow the instructions provided at https://www.openpolicyagent.org/docs/latest/envoy-tutorial-standalone-envoy/#6-exercise-the-opa-policy
 
 _**Note**_: The check "_that Bob cannot create an employee with the same firstname as himself_", will **not** result in a '403 Forbidden' as in the original tutorial. This is due to the policy change described above - where the expression that relied on `input.parsed_body` was removed.
 

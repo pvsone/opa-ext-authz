@@ -1,6 +1,6 @@
-# Istio
+# Istio with OPA
 
-Run the [OPA Envoy Authorization](https://www.openpolicyagent.org/docs/latest/envoy-authorization/) tutorial using [Istio](https://istio.io/)
+Run the [OPA Envoy Authorization](https://www.openpolicyagent.org/docs/latest/envoy-introduction/) tutorial using [Istio](https://istio.io/)
 
 ## Prerequisites
 
@@ -55,4 +55,4 @@ echo $SERVICE_URL
 
 ### 6. Exercise the OPA policy
 
-Follow the instructions provided at https://www.openpolicyagent.org/docs/latest/envoy-authorization/#6-exercise-the-opa-policy
+Follow the instructions provided at https://www.openpolicyagent.org/docs/latest/envoy-tutorial-standalone-envoy/#6-exercise-the-opa-policy

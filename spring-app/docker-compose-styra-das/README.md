@@ -1,4 +1,4 @@
-# Spring Application with Docker Compose and Styra DAS
+# Spring Application with OPA on Docker Compose and Styra DAS
 
 A variant of the [OPA HTTP API Authorization](https://www.openpolicyagent.org/docs/latest/http-api-authorization/) tutorial using a Spring application and Styra DAS as the OPA management control plane.
 

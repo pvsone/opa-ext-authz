@@ -1,4 +1,4 @@
-# Spring Application with Docker Compose
+# Spring Application with OPA on Docker Compose
 
 A variant of the [OPA HTTP API Authorization](https://www.openpolicyagent.org/docs/latest/http-api-authorization/) tutorial using a Spring application.
 

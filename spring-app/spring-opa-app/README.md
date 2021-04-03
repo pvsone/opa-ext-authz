@@ -1,4 +1,4 @@
-# spring-opa-app
+# Spring OPA Application
 
 ## Build
 ```

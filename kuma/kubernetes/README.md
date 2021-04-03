@@ -1,6 +1,6 @@
-# Kuma
+# Kuma with OPA on Kubernetes
 
-Run the [OPA Envoy Authorization](https://www.openpolicyagent.org/docs/latest/envoy-authorization/) tutorial using [Kuma](https://kuma.io/)
+Run the [OPA Envoy Authorization](https://www.openpolicyagent.org/docs/latest/envoy-introduction/) tutorial using [Kuma](https://kuma.io/)
 
 ## Prerequisites
 
@@ -56,4 +56,4 @@ kubectl apply -f proxy-template.yaml
 
 ### 6. Exercise the OPA policy
 
-Follow the instructions provided at https://www.openpolicyagent.org/docs/latest/envoy-authorization/#6-exercise-the-opa-policy
+Follow the instructions provided at https://www.openpolicyagent.org/docs/latest/envoy-tutorial-standalone-envoy/#6-exercise-the-opa-policy

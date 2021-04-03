@@ -1,4 +1,4 @@
-# Spring Application with Cloud Foundry and Styra DAS
+# Spring Application with OPA on Cloud Foundry and Styra DAS
 
 
 ## Prerequisites

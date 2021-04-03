@@ -1,6 +1,6 @@
 # Envoy with OPA on Docker Compose
 
-Run the [OPA Envoy Authorization](https://www.openpolicyagent.org/docs/latest/envoy-authorization/) tutorial using Docker Compose
+Run the [OPA Envoy Authorization](https://www.openpolicyagent.org/docs/latest/envoy-introduction/) tutorial using Docker Compose
 
 ## Prerequisites
 
@@ -24,4 +24,4 @@ Set the `SERVICE_URL` environment variable to the service’s IP/port.
 export SERVICE_URL=localhost:8000
 ```
 
-Follow the instructions provided at https://www.openpolicyagent.org/docs/latest/envoy-authorization/#6-exercise-the-opa-policy
+Follow the instructions provided at https://www.openpolicyagent.org/docs/latest/envoy-tutorial-standalone-envoy/#6-exercise-the-opa-policy

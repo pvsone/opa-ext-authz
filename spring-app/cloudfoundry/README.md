@@ -1,4 +1,4 @@
-# Spring Application with Cloud Foundry
+# Spring Application with OPA on Cloud Foundry
 
 
 ## Prerequisites
