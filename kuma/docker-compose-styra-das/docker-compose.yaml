@@ -32,7 +32,7 @@ services:
         ipv4_address: 172.44.0.2
 
   opa:
-    image: openpolicyagent/opa:0.26.0-envoy-1
+    image: openpolicyagent/opa:0.27.1-envoy-1
     command:
       - "run"
       - "--server"
