@@ -34,7 +34,7 @@ spring-opa-app-0.0.1.jar
 curl -L -o opa https://openpolicyagent.org/downloads/latest/opa_linux_amd64
 ```
 
-### 5. Add the OPA binary and policy to the app jar
+### 5. Add the OPA binary and DAS configuration to the app jar
 ```
 cp ../spring-opa-app/build/libs/spring-opa-app-0.0.1.jar .
 zip spring-opa-app-0.0.1.jar -u opa
