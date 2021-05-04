@@ -26,7 +26,7 @@ The file `opa-conf.yaml` will be downloaded from Styra DAS to the current direct
 > ls build/libs/
 spring-opa-app-0.0.1.jar
 
-> cd ../cloudfoundry
+> cd ../cloudfoundry-styra-das
 ```
 
 ### 4. Download the OPA binary for Linux
