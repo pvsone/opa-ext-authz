@@ -4,13 +4,13 @@ Run the [OPA Envoy Authorization](https://www.openpolicyagent.org/docs/latest/en
 
 ## Prerequisites
 
-This tutorial requires [Kuma](https://kuma.io/install/1.0.6/) and [Docker Compose](https://docs.docker.com/compose/install/).
+This tutorial requires [Kuma](https://kuma.io/install/1.1.1/) and [Docker Compose](https://docs.docker.com/compose/install/).
 
-_This tutorial has been tested with Kuma 1.0.6_
+_This tutorial has been tested with Kuma 1.1.1_
 
 ## Overview
 
-In this example, Kuma will be run in [Universal mode](https://kuma.io/docs/1.0.6/documentation/overview/#universal-mode). The Kuma Control Plane will be run directly on the user workstation host (Mac or Linux), while the Kuma Data Plane, OPA, and Application will be run as containers via Docker Compose.
+In this example, Kuma will be run in [Universal mode](https://kuma.io/docs/1.1.1/documentation/overview/#universal-mode). The Kuma Control Plane will be run directly on the user workstation host (Mac or Linux), while the Kuma Data Plane, OPA, and Application will be run as containers via Docker Compose.
 
 ## Steps
 

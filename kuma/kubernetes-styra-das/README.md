@@ -1,18 +1,18 @@
 # Kuma with OPA on Kubernetes and Styra DAS
 
-Run an OPA demo application with [Kuma](https://kuma.io/docs/1.0.6/overview/what-is-kuma/) and the [OPA Envoy Plugin](https://github.com/open-policy-agent/opa-envoy-plugin) on Kubernetes, and using Styra DAS as the OPA management control plane.
+Run an OPA demo application with [Kuma](https://kuma.io/docs/1.1.1/overview/what-is-kuma/) and the [OPA Envoy Plugin](https://github.com/open-policy-agent/opa-envoy-plugin) on Kubernetes, and using Styra DAS as the OPA management control plane.
 
 ## Prerequisites
 
-A Kubernetes cluster with Kuma [installed](https://kuma.io/docs/1.0.6/installation/kubernetes/)
+A Kubernetes cluster with Kuma [installed](https://kuma.io/docs/1.1.1/installation/kubernetes/)
 
-_This tutorial has been tested with Kuma 1.0.6_
+_This tutorial has been tested with Kuma 1.1.1_
 
 ## Steps
 
 ### 1. Start Minikube
 
-[Install](https://kuma.io/docs/1.0.6/installation/kubernetes/) the Kuma Control Plane (if not already installed)
+[Install](https://kuma.io/docs/1.1.1/installation/kubernetes/) the Kuma Control Plane (if not already installed)
 
 ### 2. Create the `kuma-opa-demo` namespace with kuma sidecar-injection enabled
 
@@ -38,7 +38,7 @@ Refer to the Styra DAS documentation for detailed instructions on how to create 
 
 The `example-app.yaml` includes both a `Deployment` with the `example-app` and `opa` sidecar, as well as the `example-app-service` `Service`
 * _The `kuma-dp` sidecar will be automatically injected_
-* In order to add an `httpFilter` via the [`ProxyTemplate`](https://kuma.io/docs/1.0.6/policies/proxy-template/#http-filter) (_in **Step 5.** below_), the `Service` must be annotated with `<port>.service.kuma.io/protocol: http` as described in [Protocol support in Kuma](https://kuma.io/docs/1.0.6/policies/protocol-support-in-kuma/)
+* In order to add an `httpFilter` via the [`ProxyTemplate`](https://kuma.io/docs/1.1.1/policies/proxy-template/#http-filter) (_in **Step 5.** below_), the `Service` must be annotated with `<port>.service.kuma.io/protocol: http` as described in [Protocol support in Kuma](https://kuma.io/docs/1.1.1/policies/protocol-support-in-kuma/)
 
 ```
 kubectl apply -f example-app.yaml

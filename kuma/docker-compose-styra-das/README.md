@@ -1,16 +1,16 @@
 # Kuma with OPA on Docker Compose and Styra DAS
 
-Run an OPA demo application with [Kuma](https://kuma.io/docs/1.0.6/overview/what-is-kuma/) and the [OPA Envoy Plugin](https://github.com/open-policy-agent/opa-envoy-plugin) on Docker Compose, and using Styra DAS as the OPA management control plane.
+Run an OPA demo application with [Kuma](https://kuma.io/docs/1.1.1/overview/what-is-kuma/) and the [OPA Envoy Plugin](https://github.com/open-policy-agent/opa-envoy-plugin) on Docker Compose, and using Styra DAS as the OPA management control plane.
 
 ## Prerequisites
 
-This tutorial requires [Kuma](https://kuma.io/install/1.0.6/) and [Docker Compose](https://docs.docker.com/compose/install/).
+This tutorial requires [Kuma](https://kuma.io/install/1.1.1/) and [Docker Compose](https://docs.docker.com/compose/install/).
 
-_This tutorial has been tested with Kuma 1.0.6_
+_This tutorial has been tested with Kuma 1.1.1_
 
 ## Overview
 
-In this example, Kuma will be run in [Universal mode](https://kuma.io/docs/1.0.6/documentation/overview/#universal-mode). The Kuma Control Plane will be run directly on the user workstation host (Mac or Linux), while the Kuma Data Plane, OPA, and Application will be run as containers via Docker Compose.
+In this example, Kuma will be run in [Universal mode](https://kuma.io/docs/1.1.1/documentation/overview/#universal-mode). The Kuma Control Plane will be run directly on the user workstation host (Mac or Linux), while the Kuma Data Plane, OPA, and Application will be run as containers via Docker Compose.
 
 ## Steps
 
