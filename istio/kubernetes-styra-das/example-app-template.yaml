@@ -1,9 +1,9 @@
-kind: ConfigMap
+kind: Secret
 apiVersion: v1
 metadata:
-  name: opa-envoy-config
+  name: opa-das-config
   namespace: istio-opa-demo
-data:
+stringData:
   conf.yaml: |
     services:
       - name: styra
@@ -44,20 +44,20 @@ spec:
           - name: POLICY_PATH
             value: /v1/data/policy/com.styra.envoy.app/main/main
         - name: opa
-          image: openpolicyagent/opa:0.27.1-envoy-1
+          image: openpolicyagent/opa:0.31.0-envoy-2
           volumeMounts:
           - readOnly: true
             mountPath: /config
-            name: opa-config-vol
+            name: opa-config
           args:
           - "run"
           - "--server"
           - "--ignore=.*"
           - "--config-file=/config/conf.yaml"
       volumes:
-      - name: opa-config-vol
-        configMap:
-          name: opa-envoy-config
+      - name: opa-config
+        secret:
+          secretName: opa-das-config
 ---
 apiVersion: v1
 kind: Service

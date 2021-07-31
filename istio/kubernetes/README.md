@@ -6,7 +6,7 @@ Run the [OPA Envoy Authorization](https://www.openpolicyagent.org/docs/latest/en
 
 A Kubernetes cluster with Istio [installed](https://istio.io/latest/docs/setup/getting-started/#install)
 
-_This tutorial has been tested with Istio 1.8_
+_This tutorial has been tested with Istio 1.10_
 
 ## Steps
 

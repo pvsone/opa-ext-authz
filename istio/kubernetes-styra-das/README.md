@@ -6,7 +6,7 @@ Run an OPA demo application with [Istio](https://istio.io/latest/docs/concepts/w
 
 A Kubernetes cluster with Istio [installed](https://istio.io/latest/docs/setup/getting-started/#install)
 
-_This tutorial has been tested with Istio 1.8_
+_This tutorial has been tested with Istio 1.10_
 
 ## Steps
 

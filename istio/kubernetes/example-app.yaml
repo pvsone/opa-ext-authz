@@ -22,7 +22,7 @@ spec:
           ports:
             - containerPort: 8080
         - name: opa
-          image: openpolicyagent/opa:0.27.1-envoy-1
+          image: openpolicyagent/opa:0.31.0-envoy-2
           volumeMounts:
           - readOnly: true
             mountPath: /policy
