@@ -4,15 +4,15 @@ Run the [OPA Envoy Authorization](https://www.openpolicyagent.org/docs/latest/en
 
 ## Prerequisites
 
-A Kubernetes cluster with Kong Mesh [installed](https://docs.konghq.com/mesh/1.2.x/installation/kubernetes/)
+A Kubernetes cluster with Kong Mesh [installed](https://docs.konghq.com/mesh/1.3.x/installation/kubernetes/)
 
-_This tutorial has been tested with Kong Mesh 1.2.1_
+_This tutorial has been tested with Kong Mesh 1.3.2_
 
 ## Steps
 
 ### 1. Start Minikube
 
-[Install](https://docs.konghq.com/mesh/1.2.x/installation/kubernetes/) the Kong Mesh Control Plane (if not already installed)
+[Install](https://docs.konghq.com/mesh/1.3.x/installation/kubernetes/) the Kong Mesh Control Plane (if not already installed)
 
 ### 2. Create the `kmesh-opa-demo` namespace with kuma sidecar-injection enabled
 
