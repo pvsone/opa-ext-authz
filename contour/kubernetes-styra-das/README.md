@@ -56,7 +56,7 @@ All resources will be created in the `contour-opa-demo` namespace.
 kubectl apply -f opa.yaml
 ```
 
-### 5. Create App Deployment with Contour HTTPProxy and OPA AuthZ
+### 6. Create App Deployment with Contour HTTPProxy and OPA AuthZ
 
 The `example-app.yaml` includes a `Deployment`, `Service`, `Certificate` (for TLS), and the `projectcontour.io/v1.`[HTTPProxy](https://projectcontour.io/docs/v1.18.0/config/api/#projectcontour.io/v1.HTTPProxy) needed to configure the virtual host and route for the `example-app`, integrated with `opa` for authorization.
 
@@ -70,13 +70,13 @@ envsubst < example-app.yaml | kubectl apply -f -
 
 If you do not have the `envsubst` command available, you can manually replace the `${CONTOUR_IP}` values in the `example-app.yaml` file with the IP address returned by the `minikube ip` command.
 
-### 6. Update the OPA Policy
+### 7. Update the OPA Policy
 
 Copy the contents of `ingress-rules.rego` into the `Ingress` > `Rules` module in Styra DAS.  Click Publish to save the policy and distribute to the deployed OPA.
 
 Only the `Ingress` policy is utilized by Contour, you can ignore the `Egress` and `Application` policy modules.
 
-### 7. Exercise the OPA policy
+### 8. Exercise the OPA policy
 
 The ingress rules validate and decode JWTs as part of the policy implementation. For convenience in testing, store the following test tokens in environment variables.
 
@@ -113,6 +113,6 @@ curl -k -i "https://${CONTOUR_IP}.nip.io/post" -X POST -H "Authorization: Bearer
 
 This is **allowed** by the `Ingress` policy and returns HTTP status `200`
 
-### 8. Review the Decisions in Styra DAS
+### 9. Review the Decisions in Styra DAS
 
 OPA will evaluate each authorization query from the demo web app, and return to it the result. Based on the Styra DAS configuration, the OPA will also send a log of the decision to Styra DAS. You can view each log entry under the `System` -> `Decisions` tab.
