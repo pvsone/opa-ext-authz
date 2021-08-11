@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: example-app
+  namespace: contour-opa-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: httpbin
+  template:
+    metadata:
+      labels:
+        app: httpbin
+    spec:
+      containers:
+      - name: httpbin
+        image: kennethreitz/httpbin:latest
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: example-app
+  namespace: contour-opa-demo
+spec:
+  ports:
+  - name: http
+    port: 80
+  selector:
+    app: httpbin
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: contour-nip
+  namespace: contour-opa-demo
+spec:
+  dnsNames:
+  - ${CONTOUR_IP}.nip.io
+  secretName: contour-nip
+  issuerRef:
+    name: selfsigned
+    kind: ClusterIssuer
+---
+apiVersion: projectcontour.io/v1
+kind: HTTPProxy
+metadata:
+  name: example-app-with-opa-authz
+  namespace: contour-opa-demo
+spec:
+  virtualhost:
+    fqdn: ${CONTOUR_IP}.nip.io
+    tls:
+      secretName: contour-nip
+    authorization:
+      extensionRef:
+        name: opa
+        namespace: contour-opa-demo
+  routes:
+  - services:
+    - name: example-app
+      port: 80

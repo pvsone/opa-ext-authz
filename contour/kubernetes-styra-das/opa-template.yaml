@@ -1,0 +1,107 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: contour-opa-demo
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: opa-config
+  namespace: contour-opa-demo
+type: Opaque
+stringData:
+  opa-conf.yaml: |
+    services:
+    - name: styra
+      url: https://<styra-organization-id>/v1
+      credentials:
+        bearer:
+          token: "<styra-token>"
+    labels:
+      system-id: "<styra-system-id>"
+      system-type: "envoy"
+    bundles:
+      systems/<styra-system-id>?eval_path=policy%5B%22com.styra.envoy%22%5D.resolver.main:
+        polling:
+          max_delay_seconds: 15
+          min_delay_seconds: 10
+        resource: /bundles/systems/<styra-system-id>?eval_path=policy%5B%22com.styra.envoy%22%5D.resolver.main
+        service: styra
+    decision_logs:
+      reporting:
+        max_delay_seconds: 15
+        min_delay_seconds: 10
+        upload_size_limit_bytes: 131072
+      service: styra
+    default_decision: policy/com.styra.envoy/resolver/main
+    plugins:
+      envoy_ext_authz_grpc:
+        addr: 0.0.0.0:9191
+        dry-run: false
+        path: policy/com.styra.envoy/resolver/main
+    status:
+      service: styra
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: opa
+  name: opa
+  namespace: contour-opa-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: opa
+  template:
+    metadata:
+      labels:
+        app: opa
+    spec:
+      containers:
+      - args:
+          - "run"
+          - "--server"
+          - "--config-file=/config/opa-conf.yaml"
+          - "--ignore=.*"
+        image: openpolicyagent/opa:latest-envoy
+        name: opa
+        ports:
+        - containerPort: 9191
+          name: grpc
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /config
+          name: opa-config
+          readOnly: true
+      volumes:
+      - name: opa-config
+        secret:
+          secretName: opa-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: opa
+  namespace: contour-opa-demo
+spec:
+  ports:
+  - name: grpc
+    port: 9191
+    protocol: TCP
+    targetPort: 9191
+  selector:
+    app: opa
+  type: ClusterIP
+---
+apiVersion: projectcontour.io/v1alpha1
+kind: ExtensionService
+metadata:
+  name: opa
+  namespace: contour-opa-demo
+spec:
+  protocol: h2c
+  services:
+  - name: opa
+    port: 9191
