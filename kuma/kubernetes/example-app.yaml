@@ -20,11 +20,11 @@ spec:
     spec:
       containers:
         - name: app
-          image: openpolicyagent/demo-test-server:v1
+          image: kennethreitz/httpbin:latest
           ports:
-            - containerPort: 8080
+            - containerPort: 80
         - name: opa
-          image: openpolicyagent/opa:0.27.1-envoy-1
+          image: openpolicyagent/opa:latest-envoy
           volumeMounts:
           - readOnly: true
             mountPath: /policy
@@ -35,7 +35,7 @@ spec:
           - "--addr=localhost:8181"
           - "--diagnostic-addr=0.0.0.0:8282"
           - "--set=plugins.envoy_ext_authz_grpc.addr=:9191"
-          - "--set=plugins.envoy_ext_authz_grpc.query=data.envoy.authz.allow"
+          - "--set=plugins.envoy_ext_authz_grpc.path=envoy/authz/allow"
           - "--set=decision_logs.console=true"
           - "--ignore=.*"
           - "/policy/policy.rego"
@@ -54,9 +54,9 @@ spec:
             initialDelaySeconds: 5
             periodSeconds: 5
       volumes:
-        - name: opa-policy
-          secret:
-            secretName: opa-policy
+      - name: opa-policy
+        secret:
+          secretName: opa-policy
 ---
 apiVersion: v1
 kind: Service
@@ -70,7 +70,7 @@ spec:
   - name: http
     port: 8080
     protocol: TCP
-    targetPort: 8080
+    targetPort: 80
   selector:
     app: example-app
   type: NodePort

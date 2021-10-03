@@ -2,7 +2,7 @@ apiVersion: kuma.io/v1alpha1
 kind: ProxyTemplate
 mesh: default
 metadata:
-  name: opa-ext-authz-filter
+  name: opa-ext-authz
   namespace: kuma-opa-demo
 spec:
   selectors:
