@@ -1,12 +1,12 @@
 # Istio with OPA and Styra DAS
 
-Run an OPA demo application with [Istio](https://istio.io/latest/docs/concepts/what-is-istio/) and the [OPA Envoy Plugin](https://github.com/open-policy-agent/opa-envoy-plugin), and using Styra DAS as the OPA management control plane.
+_This tutorial has been deprecated (although it is still maintained).  Please see the [Istio Tutorial](https://docs.styra.com/v1/docs/tutorials/istio/) within the official Styra DAS documentation for a more complete example._
 
 ## Prerequisites
 
 A Kubernetes cluster with Istio [installed](https://istio.io/latest/docs/setup/getting-started/#install)
 
-_This tutorial has been tested with Istio 1.10_
+_This tutorial has been tested with Istio 1.11_
 
 ## Steps
 
@@ -16,7 +16,7 @@ _This tutorial has been tested with Istio 1.10_
 
 ### 2. Create the `istio-opa-demo` namespace with istio-injection enabled
 
-```
+```sh
 kubectl apply -f namespace.yaml
 ```
 
@@ -24,13 +24,13 @@ kubectl apply -f namespace.yaml
 
 The `EnvoyFilter` configuration defines an external authorization filter `envoy.ext_authz` for a gRPC authorization server provided by the OPA sidecar.
 
-```
+```sh
 kubectl apply -f envoy-filter.yaml
 ```
 
-### 4. Create an Envoy System in Styra DAS
+### 4. Create an Istio System in Styra DAS
 
-Refer to the Styra DAS documentation for detailed instructions on how to create a new System within your DAS environment, using the `Envoy` System type.
+Refer to the Styra DAS documentation for detailed instructions on how to create a new System within your DAS environment, using the `Istio` System type.
 
 ### 5. Create the Styra DAS configuration for OPA
 
@@ -47,61 +47,53 @@ Refer to the Styra DAS documentation for detailed instructions on how to create 
 The `example-app.yaml` includes both a `Deployment` with the `example-app` and `opa` sidecar, as well as the `example-app-service` `Service`
 * _The `istio-proxy` sidecar will be automatically injected_
 
-```
+```sh
 kubectl apply -f example-app.yaml
 ```
 
 Set the `SERVICE_URL` environment variable to the service’s IP/port.
 
 **minikube:**
-```
-export SERVICE_PORT=$(kubectl -n istio-opa-demo get service example-app-service -o jsonpath='{.spec.ports[?(@.port==5000)].nodePort}')
+```sh
+export SERVICE_PORT=$(kubectl -n istio-opa-demo get service example-app-service -o jsonpath='{.spec.ports[?(@.port==8080)].nodePort}')
 export SERVICE_HOST=$(minikube ip)
 export SERVICE_URL=$SERVICE_HOST:$SERVICE_PORT
 echo $SERVICE_URL
 ```
 
-### 7. Exercise the OPA policy
+### 7. Create and Exercise the OPA policy
 
-The `Ingress`, `Egress` and `Application` policies are pre-created in the Styra DAS Envoy system for the example application.
+#### Create the Ingress Policy
 
-You can review the policies within the respective policy modules in the DAS UI. No modifications to the policies are necessary for this tutorial, although this tutorial will not exercise the `Egress` policy.  The tests below will demonstrate the `Ingress` and `Application` policies only.
+Within your Styra DAS Istio system replace the contents of the `policy/ingress/rules.rego` file with the following:
+```rego
+package policy.ingress
 
-#### Check that `alice` can see her own salary.
+import input.attributes.request.http as http_request
 
-```
-curl -i --user alice:password $SERVICE_URL/finance/salary/alice
-```
+default allow = false
 
-This is **allowed** by both the `Ingress` policy and the `Application` policy.
-
-#### Check that `bob` can see `alice`’s salary
-`bob` is `alice`’s manager, so access is allowed
-
-```
-curl -i --user bob:password $SERVICE_URL/finance/salary/alice
+allow {
+  http_request.method == "GET"
+  input.parsed_path = ["get"]
+}
 ```
 
-This is **allowed** by both the `Ingress` policy and the `Application` policy.
+**Publish** the policy to save and distribute the policy to the OPA instance.
 
-#### Check that `bob` CANNOT see `charlie`’s salary.
-`bob` is not `charlie`’s manager, so access is denied
+#### Check that a `GET` request to the `/get` endpoint is **Allowed** (`200 OK`).
 
-```
-curl -i --user bob:password $SERVICE_URL/finance/salary/charlie
-```
-
-This is **allowed** by the `Ingress` policy, but **denied** by the `Application` policy.
-
-#### Check that `bob` CANNOT view the HR dashboard.
-The HR Dashboard is not allowed for any user per the default `Ingress` policy.
-
-```
-curl -i --user bob:password $SERVICE_URL/hr/dashboard
+```sh
+curl -X GET $SERVICE_URL/get -i
 ```
 
-This is **denied** by the `Ingress` policy.  The request is never handled by the application as Envoy rejects the request with a `403 Forbidden` response.
+#### Check that a `POST` request to the `/post` endpoint is **Denied** (`403 Forbidden`).
+
+```sh
+curl -X POST $SERVICE_URL/post -i
+```
 
 ### 8. Review the Decisions in Styra DAS
 
-OPA will evaluate each authorization query from the demo web app, and return to it the result. Based on the Styra DAS configuration, the OPA will also send a log of the decision to Styra DAS. You can view each log entry under the `System` -> `Decisions` tab.
+OPA will evaluate each authorization query invoked by the Istio proxy, and return to it the result. The OPA will also send a log of the decision to Styra DAS. You can view each log entry under the `System` -> `Decisions` tab.
+

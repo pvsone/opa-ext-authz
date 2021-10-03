@@ -6,17 +6,18 @@ metadata:
 stringData:
   conf.yaml: |
     services:
-      - name: styra
-        url: https://<styra-organization-id>/v1
-        credentials:
-          bearer:
-            token: "<styra-token>"
+    - name: styra
+      url: https://<styra-organization-id>/v1
+      credentials:
+        bearer:
+          token: <styra-token>
     labels:
-      system-id: "<styra-system-id>"
-      system-type: "envoy"
+      system-type: template.istio:1.0
+      system-id: <styra-system-id>
     discovery:
       name: discovery
-      prefix: "/systems/<styra-system-id>"
+      resource: /systems/<styra-system-id>/discovery
+      service: 'styra'
 ---
 kind: Deployment
 apiVersion: apps/v1
@@ -37,14 +38,11 @@ spec:
     spec:
       containers:
         - name: app
-          image: pvsone/demo-restful-api:0.3
+          image: kennethreitz/httpbin:latest
           ports:
-            - containerPort: 5000
-          env:
-          - name: POLICY_PATH
-            value: /v1/data/policy/com.styra.envoy.app/main/main
+            - containerPort: 80
         - name: opa
-          image: openpolicyagent/opa:0.31.0-envoy-2
+          image: openpolicyagent/opa:latest-envoy
           volumeMounts:
           - readOnly: true
             mountPath: /config
@@ -67,9 +65,9 @@ metadata:
 spec:
   ports:
   - name: http
-    port: 5000
+    port: 8080
     protocol: TCP
-    targetPort: 5000
+    targetPort: 80
   selector:
     app: example-app
   type: NodePort
