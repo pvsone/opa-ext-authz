@@ -11,27 +11,27 @@ spec:
     agentConfig:
       inlineString: |
         services:
-          - name: styra
-            url: https://<styra-organization-id>/v1
-            credentials:
-              bearer:
-                token: "<styra-token>"
+        - name: styra
+          url: https://<styra-organization-id>/v1
+          credentials:
+            bearer:
+              token: "<styra-token>"
         labels:
           system-id: "<styra-system-id>"
-          system-type: "envoy"
-        bundle:
-          name: systems/<styra-system-id>?eval_path=policy%5B%22com.styra.envoy%22%5D.resolver.main
-          polling:
-            max_delay_seconds: 15
-            min_delay_seconds: 10
-          prefix: bundles
-          service: styra
+          system-type: "kong"
+        bundles:
+          systems/<styra-system-id>:
+            polling:
+              max_delay_seconds: 15
+              min_delay_seconds: 10
+            resource: /bundles/systems/<styra-system-id>
+            service: styra
         decision_logs:
           reporting:
             max_delay_seconds: 15
             min_delay_seconds: 10
             upload_size_limit_bytes: 131072
           service: styra
-        default_decision: policy/com.styra.envoy/resolver/main
+        default_decision: main/main
         status:
           service: styra

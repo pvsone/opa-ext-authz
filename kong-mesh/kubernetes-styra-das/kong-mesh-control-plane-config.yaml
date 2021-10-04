@@ -13,4 +13,4 @@ data:
         injector:
           sidecarContainer:
             envVars:
-              KMESH_OPA_CONFIG_OVERRIDES: "plugins.envoy_ext_authz_grpc.path=policy/com.styra.envoy/resolver/main"
+              KMESH_OPA_CONFIG_OVERRIDES: "plugins.envoy_ext_authz_grpc.path=main/main"

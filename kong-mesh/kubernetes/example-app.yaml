@@ -18,9 +18,9 @@ spec:
     spec:
       containers:
         - name: app
-          image: openpolicyagent/demo-test-server:v1
+          image: kennethreitz/httpbin:latest
           ports:
-            - containerPort: 8080
+            - containerPort: 80
 ---
 apiVersion: v1
 kind: Service
@@ -34,7 +34,7 @@ spec:
   - name: http
     port: 8080
     protocol: TCP
-    targetPort: 8080
+    targetPort: 80
   selector:
     app: example-app
   type: NodePort

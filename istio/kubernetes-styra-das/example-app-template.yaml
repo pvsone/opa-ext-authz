@@ -12,7 +12,7 @@ stringData:
         bearer:
           token: <styra-token>
     labels:
-      system-type: template.istio:1.0
+      system-type: "istio"
       system-id: <styra-system-id>
     discovery:
       name: discovery
