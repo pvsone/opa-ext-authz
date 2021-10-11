@@ -1,0 +1,20 @@
+_format_version: "2.1"
+_transform: true
+
+services:
+- name: demo-app
+  url: http://app:8080
+  routes:
+  - name: demo-app-route
+    paths:
+    - /
+  plugins:
+  - name: opa
+    config:
+      policy:
+        base_path: v1/data
+        decision: rules/allow
+      server:
+        host: opa
+        port: 8181
+        protocol: http

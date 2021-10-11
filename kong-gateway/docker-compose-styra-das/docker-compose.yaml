@@ -5,42 +5,24 @@ services:
   app:
     image: openpolicyagent/demo-test-server:v1
 
-  kong-migrations:
-    image: kong-opa:2.0
-    command: ["kong", "migrations", "bootstrap"]
-    environment:
-      KONG_DATABASE: postgres
-      KONG_PG_DATABASE: kong
-      KONG_PG_HOST: db
-      KONG_PG_PASSWORD: kong
-      KONG_PG_USER: kong
-    restart: on-failure
-
   kong:
-    image: kong-opa:2.0
+    image: kong-opa:2.6.0
     environment:
+      KONG_DATABASE: "off"
+      KONG_PROXY_ACCESS_LOG: /dev/stdout
       KONG_ADMIN_ACCESS_LOG: /dev/stdout
+      KONG_PROXY_ERROR_LOG: /dev/stderr
       KONG_ADMIN_ERROR_LOG: /dev/stderr
-      KONG_ADMIN_LISTEN: '0.0.0.0:8001'
-      KONG_DATABASE: postgres
-      KONG_LOG_LEVEL: debug
-      KONG_PG_DATABASE: kong
-      KONG_PG_HOST: db
-      KONG_PG_PASSWORD: kong
-      KONG_PG_USER: kong
+      KONG_ADMIN_LISTEN: 0.0.0.0:8001, 0.0.0.0:8444 ssl
+      KONG_DECLARATIVE_CONFIG: /usr/local/kong/declarative/kong.yaml
       KONG_PLUGINS: bundled,opa
     ports:
-      - "8000-8001:8000-8001/tcp"
-      - "8443:8443/tcp"
-      - "127.0.0.1:8444:8444/tcp"
-    restart: on-failure
-
-  db:
-    image: postgres:9.5
-    environment:
-      POSTGRES_DB: kong
-      POSTGRES_PASSWORD: kong
-      POSTGRES_USER: kong
+      - "8000:8000"
+      - "8443:8443"
+      - "8001:8001"
+      - "8444:8444"
+    volumes:
+      - ./kong.yaml:/usr/local/kong/declarative/kong.yaml
 
   opa:
     image: openpolicyagent/opa:latest
@@ -48,7 +30,7 @@ services:
       - "run"
       - "--server"
       - "--config-file=/config/opa-conf.yaml"
-    volumes:
-      - ./opa-conf.yaml:/config/opa-conf.yaml
     ports:
       - "8181:8181"
+    volumes:
+      - ./opa-conf.yaml:/config/opa-conf.yaml

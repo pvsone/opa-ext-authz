@@ -1,6 +1,6 @@
-# Kong Gateway with OPA on Docker Compose and Styra DAS
+# Kong Gateway (OSS) with OPA on Docker Compose and Styra DAS
 
-Run an OPA demo application with [Kong Gateway](https://konghq.com/kong/) and the [OPA Kong Plugin](https://github.com/open-policy-agent/contrib/tree/master/kong_api_authz) on Docker Compose, and using Styra DAS as the OPA management control plane.
+Run an OPA demo application with [Kong Gateway (OSS)](https://docs.konghq.com/gateway-oss/) and the [OPA Kong Plugin](https://github.com/open-policy-agent/contrib/tree/master/kong_api_authz) on Docker Compose, and using Styra DAS as the OPA management control plane.
 
 ## Steps 
 
@@ -21,25 +21,27 @@ The file `opa-conf.yaml` will be downloaded from Styra DAS to the current direct
 Download or clone the [open-policy-agent/contrib](https://github.com/open-policy-agent/contrib) repo.
 
 Build the Docker image
-```
-# within the contrib directory
-cd kong_api_authz
-docker build . -t kong-opa:2.0
+```sh
+cd contrib/kong_api_authz
+
+# Update the `Dockerfile` with your preferred `kong` image version
+# e.g. `FROM kong:2.6.0`
+sed -i '' -e 's/kong:2.0/kong:2.6.0/' Dockerfile
+
+docker build . -t kong-opa:2.6.0
 ```
 
 ### 4. Run the App with Kong and OPA
-
-```
-# within this repo's directory
+```sh
 docker-compose up
 ```
 
-The `app` in the `docker-compose.yaml` file uses the same image (`openpolicyagent/demo-test-server:v1`) used in the [Envoy Authorization with OPA](https://www.openpolicyagent.org/docs/latest/envoy-introduction/) tutorial.
+The `app` in the `docker-compose.yaml` file uses the same image (`openpolicyagent/demo-test-server:v1`) used in the [OPA Envoy](https://www.openpolicyagent.org/docs/latest/envoy-tutorial-standalone-envoy/) tutorial.
 
 The `opa` instance is started with the `opa-conf.yaml` configuration file. It will use this configuration to communicate with Styra DAS to pull configuration and bundles, and to push decision logs.
 
 Open a second terminal and verify Kong is running
-```
+```sh
 curl -i http://localhost:8001
 ```
 
@@ -71,41 +73,18 @@ Save the change by clicking the `Update Mapping` button.
 
 Refer to the Styra DAS documentation for complete details on Decision Mappings configuration.
 
-### 7. Configure the Kong Service, Route and Plugin
-
-Configure the Service
-```
-curl -i -X POST http://localhost:8001/services \
-  --data name=demo-app \
-  --data url='http://app:8080'
-```
-
-Configure the Route
-```
-curl -i -X POST http://localhost:8001/services/demo-app/routes \
-  --data 'paths[]=/'
-```
-
-Configure the Plugin
-```
-curl -i -X POST http://localhost:8001/plugins \
-  --data name=opa \
-  --data config.server.host=opa \
-  --data config.policy.decision=rules/allow
-```
-
-### 8. Exercise the OPA policy
+### 7. Exercise the OPA policy
 
 Set the `SERVICE_URL` environment variable to the service’s IP/port.
 
-```
+```sh
 export SERVICE_URL=localhost:8000
 ```
 
-Follow the instructions provided at https://www.openpolicyagent.org/docs/latest/envoy-tutorial-standalone-envoy/#6-exercise-the-opa-policy
+Follow the instructions provided at https://www.openpolicyagent.org/docs/latest/envoy-tutorial-standalone-envoy/#7-exercise-the-opa-policy
 
 _**Note**_: The check "_that Bob cannot create an employee with the same firstname as himself_", will **not** result in a '403 Forbidden' as in the original tutorial. This is due to the policy change described above - where the expression that relied on `input.parsed_body` was removed.
 
-### 9. Review the Decisions in Styra DAS
+### 8. Review the Decisions in Styra DAS
 
 OPA will evaluate each authorization query from the demo web app, and return to it the result. Based on the Styra DAS configuration, the OPA will also send a log of the decision to Styra DAS. You can view each log entry under the `System` -> `Decisions` tab.
