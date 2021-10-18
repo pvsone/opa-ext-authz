@@ -38,7 +38,7 @@ kubectl create secret generic opa-policy --from-file policy.rego -n kuma-opa-dem
 
 The `example-app.yaml` includes both a `Deployment` with the `example-app` and `opa` sidecar, as well as the `example-app-service` `Service`
 * _The `kuma-dp` sidecar will be automatically injected_
-* In order to add an `httpFilter` via the [`ProxyTemplate`](https://kuma.io/docs/1.3.0/policies/proxy-template/#http-filter) (_in **Step 5.** below_), the `Service` must be annotated with `<port>.service.kuma.io/protocol: http` as described in [Protocol support in Kuma](https://kuma.io/docs/1.3.0/policies/protocol-support-in-kuma/)
+* In order to add an `httpFilter` via the [`ProxyTemplate`](https://kuma.io/docs/1.3.0/policies/proxy-template/#http-filter) (_via **Step 3.** above_), the `Service` must be annotated with `<port>.service.kuma.io/protocol: http` as described in [Protocol support in Kuma](https://kuma.io/docs/1.3.0/policies/protocol-support-in-kuma/)
 
 ```sh
 kubectl apply -f example-app.yaml
