@@ -1,0 +1,55 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: example-app
+  labels:
+    app: example-app
+spec:
+  selector:
+    matchLabels:
+      app: example-app
+  template:
+    metadata:
+      labels:
+        app: example-app
+    spec:
+      containers:
+      - name: app
+        image: kennethreitz/httpbin:latest
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: example-app
+spec:
+  ports:
+  - name: http
+    port: 8080
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: example-app
+---
+apiVersion: gateway.solo.io/v1
+kind: VirtualService
+metadata:
+  name: default
+  namespace: gloo-system
+spec:
+  virtualHost:
+    domains:
+    - '*'
+    routes:
+    - matchers:
+      - prefix: /
+      routeAction:
+        single:
+          upstream:
+            name: default-example-app-8080
+            namespace: gloo-system
+    options:
+      extauth:
+        customAuth: {}

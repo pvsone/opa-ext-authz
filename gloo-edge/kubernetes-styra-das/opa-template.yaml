@@ -1,0 +1,101 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: opa-config
+  namespace: gloo-system
+stringData:
+  opa-conf.yaml: |
+    services:
+    - name: styra
+      url: https://<styra-organization-id>/v1
+      credentials:
+        bearer:
+          token: <styra-token>
+    labels:
+      system-type: envoy
+      system-id: <styra-system-id>
+    bundles:
+      systems/<styra-system-id>:
+        polling:
+          max_delay_seconds: 15
+          min_delay_seconds: 10
+        resource: /bundles/systems/<styra-system-id>
+        service: styra
+    decision_logs:
+      reporting:
+        max_delay_seconds: 15
+        min_delay_seconds: 10
+        upload_size_limit_bytes: 131072
+      service: styra
+    default_decision: main/main
+    plugins:
+      envoy_ext_authz_grpc:
+        addr: 0.0.0.0:9191
+        dry-run: false
+        path: main/main
+    status:
+      service: styra
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: opa-extauth
+  namespace: gloo-system
+  labels:
+    app: opa-extauth
+spec:
+  selector:
+    matchLabels:
+      app: opa-extauth
+  template:
+    metadata:
+      labels:
+        app: opa-extauth
+    spec:
+      containers:
+      - name: opa-extauth
+        image: openpolicyagent/opa:latest-envoy
+        ports:
+        - containerPort: 9191
+        args:
+        - "run"
+        - "--server"
+        - "--config-file=/config/opa-conf.yaml"
+        - "--ignore=.*"
+        # livenessProbe:
+        #   httpGet:
+        #     path: /health?plugins
+        #     scheme: HTTP
+        #     port: 8282
+        #   initialDelaySeconds: 5
+        #   periodSeconds: 5
+        # readinessProbe:
+        #   httpGet:
+        #     path: /health?plugins
+        #     scheme: HTTP
+        #     port: 8282
+        #   initialDelaySeconds: 5
+        #   periodSeconds: 5
+        volumeMounts:
+        - mountPath: /config
+          name: opa-config
+          readOnly: true
+      volumes:
+      - name: opa-config
+        secret:
+          secretName: opa-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: opa-extauth
+  namespace: gloo-system
+spec:
+  ports:
+  - name: grpc
+    port: 9191
+    protocol: TCP
+    targetPort: 9191
+  selector:
+    app: opa-extauth

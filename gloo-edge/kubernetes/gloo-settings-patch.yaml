@@ -1,0 +1,5 @@
+spec:
+  extauth:
+    extauthzServerRef:
+      name: gloo-system-opa-extauth-9191
+      namespace: gloo-system

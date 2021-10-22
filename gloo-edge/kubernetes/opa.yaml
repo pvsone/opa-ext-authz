@@ -1,0 +1,68 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: opa-extauth
+  namespace: gloo-system
+  labels:
+    app: opa-extauth
+spec:
+  selector:
+    matchLabels:
+      app: opa-extauth
+  template:
+    metadata:
+      labels:
+        app: opa-extauth
+    spec:
+      containers:
+      - name: opa-extauth
+        image: openpolicyagent/opa:latest-envoy
+        ports:
+        - containerPort: 9191
+        args:
+        - "run"
+        - "--server"
+        - "--addr=localhost:8181"
+        - "--diagnostic-addr=0.0.0.0:8282"
+        - "--set=plugins.envoy_ext_authz_grpc.addr=:9191"
+        - "--set=plugins.envoy_ext_authz_grpc.path=envoy/authz/allow"
+        - "--set=decision_logs.console=true"
+        - "--ignore=.*"
+        - "/policy/policy.rego"
+        # livenessProbe:
+        #   httpGet:
+        #     path: /health?plugins
+        #     scheme: HTTP
+        #     port: 8282
+        #   initialDelaySeconds: 5
+        #   periodSeconds: 5
+        # readinessProbe:
+        #   httpGet:
+        #     path: /health?plugins
+        #     scheme: HTTP
+        #     port: 8282
+        #   initialDelaySeconds: 5
+        #   periodSeconds: 5
+        volumeMounts:
+        - readOnly: true
+          mountPath: /policy
+          name: opa-policy
+      volumes:
+      - name: opa-policy
+        secret:
+          secretName: opa-policy
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: opa-extauth
+  namespace: gloo-system
+spec:
+  ports:
+  - name: grpc
+    port: 9191
+    protocol: TCP
+    targetPort: 9191
+  selector:
+    app: opa-extauth
