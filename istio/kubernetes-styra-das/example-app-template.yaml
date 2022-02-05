@@ -1,26 +1,59 @@
-kind: Secret
 apiVersion: v1
+kind: Secret
 metadata:
   name: opa-das-config
   namespace: istio-opa-demo
 stringData:
   conf.yaml: |
-    services:
-    - name: styra
-      url: https://<styra-organization-id>/v1
-      credentials:
-        bearer:
-          token: <styra-token>
-    labels:
-      system-type: "istio"
-      system-id: <styra-system-id>
     discovery:
       name: discovery
       resource: /systems/<styra-system-id>/discovery
-      service: 'styra'
+      service: styra
+    labels:
+      system-id: <styra-system-id>
+      system-type: istio
+    services:
+    - credentials:
+        bearer:
+          token: <styra-token>
+      name: styra
+      url: https://<styra-organization-id>/v1
 ---
-kind: Deployment
+apiVersion: v1
+kind: Service
+metadata:
+  name: example-app
+  namespace: istio-opa-demo
+  labels:
+    app: example-app
+spec:
+  ports:
+  - name: http
+    port: 8080
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: example-app
+  type: NodePort
+---
+# Define the service entry for the local OPA service on port 9191.
+apiVersion: networking.istio.io/v1alpha3
+kind: ServiceEntry
+metadata:
+  name: opa-grpc
+spec:
+  hosts:
+  - "opa-grpc.local" # The service name to be used in the extension provider in the mesh config.
+  endpoints:
+  - address: "127.0.0.1"
+  ports:
+  - name: grpc
+    number: 9191
+    protocol: GRPC
+  resolution: STATIC
+---
 apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: example-app
   namespace: istio-opa-demo
@@ -40,7 +73,7 @@ spec:
         - name: app
           image: kennethreitz/httpbin:latest
           ports:
-            - containerPort: 80
+          - containerPort: 80
         - name: opa
           image: openpolicyagent/opa:latest-envoy
           volumeMounts:
@@ -52,22 +85,24 @@ spec:
           - "--server"
           - "--ignore=.*"
           - "--config-file=/config/conf.yaml"
+          - "--authorization=basic"
+          - "--addr=http://127.0.0.1:8181"
+          - "--diagnostic-addr=0.0.0.0:8282"
+          livenessProbe:
+            httpGet:
+              path: /health?plugins
+              scheme: HTTP
+              port: 8282
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /health?bundle=true
+              scheme: HTTP
+              port: 8282
+            initialDelaySeconds: 5
+            periodSeconds: 5
       volumes:
       - name: opa-config
         secret:
           secretName: opa-das-config
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: example-app-service
-  namespace: istio-opa-demo
-spec:
-  ports:
-  - name: http
-    port: 8080
-    protocol: TCP
-    targetPort: 80
-  selector:
-    app: example-app
-  type: NodePort

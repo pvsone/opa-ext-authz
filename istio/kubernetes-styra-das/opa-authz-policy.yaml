@@ -1,0 +1,15 @@
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: opa-authz
+  namespace: istio-opa-demo
+spec:
+  selector:
+    matchLabels:
+      app: example-app
+  action: CUSTOM
+  provider:
+    # The provider name must match the extension provider defined in the mesh config.
+    name: "opa-sidecar"
+  rules:
+  - {}

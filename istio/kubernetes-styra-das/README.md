@@ -6,7 +6,7 @@ _This tutorial has been deprecated (although it is still maintained).  Please se
 
 A Kubernetes cluster with Istio [installed](https://istio.io/latest/docs/setup/getting-started/#install)
 
-_This tutorial has been tested with Istio 1.11_
+_This tutorial has been tested with Istio 1.12_
 
 ## Steps
 
@@ -20,12 +20,33 @@ _This tutorial has been tested with Istio 1.11_
 kubectl apply -f namespace.yaml
 ```
 
-### 3. Create the Istio `EnvoyFilter`
+### 3. Create the Istio external authorizer
 
-The `EnvoyFilter` configuration defines an external authorization filter `envoy.ext_authz` for a gRPC authorization server provided by the OPA sidecar.
+The `AuthorizationPolicy` defines a CUSTOM action to invoke an `opa-sidecar` for authorization for the `example-app` app (the app will be deployed in a subsequent step).
 
 ```sh
-kubectl apply -f envoy-filter.yaml
+kubectl apply -f opa-authz-policy.yaml
+```
+
+Define the external authorizer for the mesh
+```sh
+kubectl edit configmap istio -n istio-system
+```
+
+```yaml
+data:
+  mesh: |-
+    # Add the following content to define the external authorizer.
+    extensionProviders:
+    - name: "opa-sidecar"
+      envoyExtAuthzGrpc:
+        service: "opa-grpc.local"
+        port: "9191"
+```
+
+Rollout the changes
+```sh
+kubectl rollout restart deployment/istiod -n istio-system
 ```
 
 ### 4. Create an Istio System in Styra DAS
@@ -44,7 +65,7 @@ Refer to the Styra DAS documentation for detailed instructions on how to create 
 
 ### 6. Create App Deployment with OPA sidecar
 
-The `example-app.yaml` includes both a `Deployment` with the `example-app` and `opa` sidecar, as well as the `example-app-service` `Service`
+The `example-app.yaml` includes a `Deployment` with the `example-app` and `opa` sidecar, the `example-app` `Service`, and the Istio `ServiceEntry` for the `opa` sidecar.
 * _The `istio-proxy` sidecar will be automatically injected_
 
 ```sh
@@ -55,7 +76,7 @@ Set the `SERVICE_URL` environment variable to the service’s IP/port.
 
 **minikube:**
 ```sh
-export SERVICE_PORT=$(kubectl -n istio-opa-demo get service example-app-service -o jsonpath='{.spec.ports[?(@.port==8080)].nodePort}')
+export SERVICE_PORT=$(kubectl -n istio-opa-demo get service example-app -o jsonpath='{.spec.ports[?(@.port==8080)].nodePort}')
 export SERVICE_HOST=$(minikube ip)
 export SERVICE_URL=$SERVICE_HOST:$SERVICE_PORT
 echo $SERVICE_URL
