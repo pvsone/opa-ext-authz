@@ -1,29 +1,34 @@
-services:
-  - name: styra
-    url: https://<styra-organization-id>/v1
-    credentials:
-      bearer:
-        token: "<styra-token>"
-labels:
-  system-id: "<styra-system-id>"
-  system-type: "envoy"
-bundle:
-  name: systems/<styra-system-id>?eval_path=policy%5B%22com.styra.envoy%22%5D.resolver.main
-  polling:
-    max_delay_seconds: 15
-    min_delay_seconds: 10
-  service: styra
+bundles:
+  systems/<styra-system-id>:
+    persist: false
+    polling:
+      max_delay_seconds: 15
+      min_delay_seconds: 10
+    resource: /bundles/systems/<styra-system-id>
+    service: styra
 decision_logs:
+  console: false
   reporting:
     max_delay_seconds: 15
     min_delay_seconds: 10
     upload_size_limit_bytes: 131072
   service: styra
-default_decision: policy/com.styra.envoy/resolver/main
+default_decision: main/main
 plugins:
   envoy_ext_authz_grpc:
     addr: :9191
     dry-run: false
-    path: policy/com.styra.envoy/resolver/main
+    enable-reflection: true
+    path: main/main
 status:
+  console: false
   service: styra
+labels:
+  system-id: <styra-system-id>
+  system-type: template.envoy:2.0
+services:
+- credentials:
+    bearer:
+      token: <styra-token>
+  name: styra
+  url: https://<styra-organization-id>/v1

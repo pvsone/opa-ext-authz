@@ -1,6 +1,6 @@
 # Envoy with OPA on Docker Compose and Styra DAS
 
-Run an OPA demo application with [Envoy](https://www.envoyproxy.io/docs/envoy/v1.17.0/intro/what_is_envoy) and the [OPA Envoy Plugin](https://github.com/open-policy-agent/opa-envoy-plugin) on Docker Compose, and using Styra DAS as the OPA management control plane.
+Run an OPA demo application with [Envoy](https://www.envoyproxy.io/docs/envoy/latest/intro/what_is_envoy) and the [OPA Envoy Plugin](https://github.com/open-policy-agent/opa-envoy-plugin) on Docker Compose, and using Styra DAS as the OPA management control plane.
 
 ## Prerequisites
 
@@ -20,13 +20,13 @@ Refer to the Styra DAS documentation for detailed instructions on how to create 
 * `<styra-organization-id>` with your tenant value, e.g. `myorg.styra.com`
 * `<styra-token>` with a valid Styra DAS API token. Refer to the Styra DAS documentation for detailed instructions on how to create a new API token.
 * `<styra-system-id>` with the `System ID` value from the `System` -> `Settings` -> `General` page.
-    * Note: there are two locations in the file where `<styra-system-id>` needs to be replaced
+    * Note: there are three locations in the file where `<styra-system-id>` needs to be replaced
 
 ## 3. Run the App with OPA and Envoy sidecars
 
 Run OPA, Envoy and the demo web app using the `docker-compose.yaml` file provided in this directory.
 
-```
+```sh
 docker-compose up
 ```
 
@@ -44,38 +44,11 @@ You can review the policies within the respective policy modules in the DAS UI. 
 
 #### Check that `alice` can see her own salary.
 
-```
+```sh
 curl -i --user alice:password localhost:8000/finance/salary/alice
 ```
 
 This is **allowed** by both the `Ingress` policy and the `Application` policy.
-
-#### Check that `bob` can see `alice`’s salary
-`bob` is `alice`’s manager, so access is allowed
-
-```
-curl -i --user bob:password localhost:8000/finance/salary/alice
-```
-
-This is **allowed** by both the `Ingress` policy and the `Application` policy.
-
-#### Check that `bob` CANNOT see `charlie`’s salary.
-`bob` is not `charlie`’s manager, so access is denied
-
-```
-curl -i --user bob:password localhost:8000/finance/salary/charlie
-```
-
-This is **allowed** by the `Ingress` policy, but **denied** by the `Application` policy.
-
-#### Check that `bob` CANNOT view the HR dashboard.
-The HR Dashboard is not allowed for any user per the default `Ingress` policy.
-
-```
-curl -i --user bob:password localhost:8000/hr/dashboard
-```
-
-This is **denied** by the `Ingress` policy.  The request is never handled by the application as Envoy rejects the request with a `403 Forbidden` response.
 
 ### 5. Review the Decisions in Styra DAS
 

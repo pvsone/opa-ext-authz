@@ -1,12 +1,9 @@
 version: '3.8'
-
 services:
-
   app:
     image: openpolicyagent/demo-test-server:v1
-
   envoy:
-    image: envoyproxy/envoy:v1.17.0
+    image: envoyproxy/envoy:v1.20.0
     command:
       - "envoy"
       - "--config-path"
@@ -15,16 +12,15 @@ services:
       - "8000:8000"
     volumes:
       - ./envoy.yaml:/config/envoy.yaml
-
   opa:
-    image: openpolicyagent/opa:0.27.1-envoy-1
+    image: openpolicyagent/opa:latest-envoy
     command:
       - "run"
       - "--server"
       - "--set=plugins.envoy_ext_authz_grpc.addr=:9191"
+      - "--set=plugins.envoy_ext_authz_grpc.path=envoy/authz/allow"
       - "--set=decision_logs.console=true"
-      - "--log-level=debug"
-      - "--log-format=json-pretty"
+      - "--set=status.console=true"
       - "/policy/policy.rego"
     volumes:
       - ./policy.rego:/policy/policy.rego
