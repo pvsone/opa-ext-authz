@@ -1,6 +1,6 @@
 type: ProxyTemplate
 mesh: default
-name: opa-ext-authz-filter
+name: opa-ext-authz
 selectors:
   - match:
       kuma.io/service: '*'

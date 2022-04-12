@@ -1,26 +1,44 @@
-kind: Secret
 apiVersion: v1
+kind: Secret
 metadata:
   name: opa-das-config
   namespace: kuma-opa-demo
 stringData:
   conf.yaml: |
-    services:
-    - name: styra
-      url: https://<styra-organization-id>/v1
-      credentials:
-        bearer:
-          token: <styra-token>
-    labels:
-      system-type: "kuma"
-      system-id: <styra-system-id>
     discovery:
       name: discovery
       resource: /systems/<styra-system-id>/discovery
-      service: 'styra'
+      service: styra
+    labels:
+      system-id: <styra-system-id>
+      system-type: kuma
+    services:
+    - credentials:
+        bearer:
+          token: <styra-token>
+      name: styra
+      url: https://<styra-organization-id>/v1
 ---
-kind: Deployment
+apiVersion: v1
+kind: Service
+metadata:
+  name: example-app
+  namespace: kuma-opa-demo
+  ## protocol annotation has been deprecated in favor of `appProtocol` (set below)
+  # annotations:
+    # 8080.service.kuma.io/protocol: "http"
+spec:
+  ports:
+  - name: http
+    port: 8080
+    appProtocol: http
+    targetPort: 80
+  selector:
+    app: example-app
+  type: NodePort
+---
 apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: example-app
   namespace: kuma-opa-demo
@@ -42,7 +60,7 @@ spec:
         - name: app
           image: kennethreitz/httpbin:latest
           ports:
-            - containerPort: 80
+          - containerPort: 80
         - name: opa
           image: openpolicyagent/opa:latest-envoy
           volumeMounts:
@@ -52,10 +70,11 @@ spec:
           args:
           - "run"
           - "--server"
-          - "--addr=localhost:8181"
-          - "--diagnostic-addr=0.0.0.0:8282"
           - "--ignore=.*"
           - "--config-file=/config/conf.yaml"
+          - "--authorization=basic"
+          - "--addr=http://127.0.0.1:8181"
+          - "--diagnostic-addr=0.0.0.0:8282"
           livenessProbe:
             httpGet:
               path: /health?plugins
@@ -65,7 +84,7 @@ spec:
             periodSeconds: 5
           readinessProbe:
             httpGet:
-              path: /health?plugins
+              path: /health?bundle=true
               scheme: HTTP
               port: 8282
             initialDelaySeconds: 5
@@ -74,20 +93,3 @@ spec:
       - name: opa-config
         secret:
           secretName: opa-das-config
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: example-app-service
-  namespace: kuma-opa-demo
-  annotations:
-    8080.service.kuma.io/protocol: "http"
-spec:
-  ports:
-  - name: http
-    port: 8080
-    protocol: TCP
-    targetPort: 80
-  selector:
-    app: example-app
-  type: NodePort

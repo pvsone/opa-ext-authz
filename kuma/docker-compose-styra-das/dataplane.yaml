@@ -6,7 +6,7 @@ networking:
   inbound: 
     - port: 10080
       serviceAddress: 172.44.0.4
-      servicePort: 5000
+      servicePort: 80
       tags: 
         kuma.io/service: example-app
         kuma.io/protocol: http

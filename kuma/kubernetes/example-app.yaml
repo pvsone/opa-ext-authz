@@ -1,6 +1,23 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: example-app
+  namespace: kuma-opa-demo
+  ## protocol annotation has been deprecated in favor of `appProtocol` (set below)
+  # annotations:
+    # 8080.service.kuma.io/protocol: "http"
+spec:
+  ports:
+  - name: http
+    port: 8080
+    appProtocol: http
+    targetPort: 80
+  selector:
+    app: example-app
+  type: NodePort
 ---
-kind: Deployment
 apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: example-app
   namespace: kuma-opa-demo
@@ -22,7 +39,7 @@ spec:
         - name: app
           image: kennethreitz/httpbin:latest
           ports:
-            - containerPort: 80
+          - containerPort: 80
         - name: opa
           image: openpolicyagent/opa:latest-envoy
           volumeMounts:
@@ -32,12 +49,12 @@ spec:
           args:
           - "run"
           - "--server"
-          - "--addr=localhost:8181"
+          - "--ignore=.*"
+          - "--addr=http://127.0.0.1:8181"
           - "--diagnostic-addr=0.0.0.0:8282"
           - "--set=plugins.envoy_ext_authz_grpc.addr=:9191"
           - "--set=plugins.envoy_ext_authz_grpc.path=envoy/authz/allow"
           - "--set=decision_logs.console=true"
-          - "--ignore=.*"
           - "/policy/policy.rego"
           livenessProbe:
             httpGet:
@@ -57,20 +74,3 @@ spec:
       - name: opa-policy
         secret:
           secretName: opa-policy
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: example-app-service
-  namespace: kuma-opa-demo
-  annotations:
-    8080.service.kuma.io/protocol: "http"
-spec:
-  ports:
-  - name: http
-    port: 8080
-    protocol: TCP
-    targetPort: 80
-  selector:
-    app: example-app
-  type: NodePort

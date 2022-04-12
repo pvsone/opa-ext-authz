@@ -1,17 +1,14 @@
 version: '3.8'
-
 services:
-
   app:
-    image: openpolicyagent/demo-test-server:v1
+    image: kennethreitz/httpbin
     expose:
-      - "8080"
+      - "80"
     networks:
       example-net:
         ipv4_address: 172.44.0.4
-
   kuma-dp:
-    image: kong-docker-kuma-docker.bintray.io/kuma-dp:1.1.1
+    image: docker.io/kumahq/kuma-dp:1.6.0
     volumes:
       - ./token-example-app:/token-example-app
       - ./dataplane.yaml:/dataplane.yaml
@@ -19,17 +16,15 @@ services:
       - "10080:10080"
     command:
       - "run"
-      - "--name=example-app"
-      - "--mesh=default"
       - "--cp-address=https://host.docker.internal:5678"
+      - "--dns-enabled=false"
       - "--dataplane-token-file=/token-example-app"
       - "--dataplane-file=/dataplane.yaml"
     networks:
       example-net:
         ipv4_address: 172.44.0.2
-
   opa:
-    image: openpolicyagent/opa:0.27.1-envoy-1
+    image: openpolicyagent/opa:latest-envoy
     command:
       - "run"
       - "--server"
@@ -45,7 +40,6 @@ services:
     networks:
       example-net:
         ipv4_address: 172.44.0.3
-
 networks:
   example-net:
     ipam:
