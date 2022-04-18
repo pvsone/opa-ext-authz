@@ -23,17 +23,24 @@ static_resources:
                 route:
                   cluster: local_service
           http_filters:
+          - name: envoy.filters.http.header_to_metadata
+            typed_config:
+              "@type": type.googleapis.com/envoy.extensions.filters.http.header_to_metadata.v3.Config
+              request_rules:
+              - header: x-opa-authz
+                on_header_missing:
+                  key: 'policy_type'
+                  value: 'ingress'
           - name: envoy.filters.http.ext_authz
             typed_config:
               "@type": type.googleapis.com/envoy.extensions.filters.http.ext_authz.v3.ExtAuthz
               failure_mode_allow: false
+              metadata_context_namespaces:
+              - envoy.filters.http.header_to_metadata
               transport_api_version: V3
-              with_request_body:
-                max_request_bytes: 8192
-                allow_partial_message: true
               grpc_service:
                 google_grpc:
-                  target_uri: opa:9191
+                  target_uri: 127.0.0.1:9191
                   stat_prefix: ext_authz
                 timeout: 1s
           - name: envoy.filters.http.router
@@ -50,7 +57,7 @@ static_resources:
         - endpoint:
             address:
               socket_address:
-                address: app
+                address: 127.0.0.1
                 port_value: 80
 admin:
   access_log_path: "/dev/null"

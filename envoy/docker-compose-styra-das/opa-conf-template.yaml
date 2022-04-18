@@ -18,7 +18,6 @@ plugins:
   envoy_ext_authz_grpc:
     addr: :9191
     dry-run: false
-    enable-reflection: true
     path: main/main
 status:
   console: false

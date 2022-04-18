@@ -1,12 +1,9 @@
 version: '3.8'
 services:
   app:
-    build: ./demo-restful-api
-    environment:
-      - OPA_ADDR=http://opa:8181
-      - POLICY_PATH=/v1/data/application/main
+    image: kennethreitz/httpbin
   envoy:
-    image: envoyproxy/envoy:v1.20.0
+    image: envoyproxy/envoy:v1.21.1
     command:
       - "envoy"
       - "--config-path"

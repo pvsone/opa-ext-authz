@@ -58,7 +58,7 @@ static_resources:
             address:
               socket_address:
                 address: app
-                port_value: 5000
+                port_value: 80
 admin:
   access_log_path: "/dev/null"
   address:

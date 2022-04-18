@@ -1,0 +1,95 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: example-app
+spec:
+  ports:
+  - name: http
+    port: 8080
+    appProtocol: http
+    targetPort: 80
+  selector:
+    app: example-app
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: example-app
+  labels:
+    app: example-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: example-app
+  template:
+    metadata:
+      labels:
+        app: example-app
+    spec:
+      initContainers:
+        - name: proxy-init
+          image: openpolicyagent/proxy_init:v5
+          args: ["-p", "8000", "-u", "1111", "-w", "8282"]
+          securityContext:
+            capabilities:
+              add:
+              - NET_ADMIN
+            runAsNonRoot: false
+            runAsUser: 0
+      containers:
+      - name: app
+        image: kennethreitz/httpbin:latest
+        ports:
+        - containerPort: 80
+      - name: envoy
+        image: envoyproxy/envoy:v1.21.1
+        volumeMounts:
+        - readOnly: true
+          mountPath: /config
+          name: proxy-config
+        args:
+        - "envoy"
+        - "--config-path"
+        - "/config/envoy.yaml"
+        env:
+        - name: ENVOY_UID
+          value: "1111"
+      - name: opa
+        image: openpolicyagent/opa:latest-envoy
+        volumeMounts:
+        - readOnly: true
+          mountPath: /policy
+          name: opa-policy
+        args:
+        - "run"
+        - "--server"
+        - "--ignore=.*"
+        - "--addr=http://127.0.0.1:8181"
+        - "--diagnostic-addr=0.0.0.0:8282"
+        - "--set=plugins.envoy_ext_authz_grpc.addr=:9191"
+        - "--set=plugins.envoy_ext_authz_grpc.path=envoy/authz/allow"
+        - "--set=decision_logs.console=true"
+        - "/policy/policy.rego"
+        livenessProbe:
+          httpGet:
+            path: /health?plugins
+            scheme: HTTP
+            port: 8282
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /health?plugins
+            scheme: HTTP
+            port: 8282
+          initialDelaySeconds: 5
+          periodSeconds: 5
+      volumes:
+      - name: proxy-config
+        configMap:
+          name: proxy-config
+      - name: opa-policy
+        secret:
+          secretName: opa-policy

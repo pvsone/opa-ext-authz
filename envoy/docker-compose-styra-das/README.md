@@ -1,6 +1,8 @@
 # Envoy with OPA on Docker Compose and Styra DAS
 
-Run an OPA demo application with [Envoy](https://www.envoyproxy.io/docs/envoy/latest/intro/what_is_envoy) and the [OPA Envoy Plugin](https://github.com/open-policy-agent/opa-envoy-plugin) on Docker Compose, and using Styra DAS as the OPA management control plane.
+Run an OPA demo application with [Envoy](https://www.envoyproxy.io/docs/envoy/latest/intro/what_is_envoy)
+and the [OPA Envoy Plugin](https://www.openpolicyagent.org/docs/latest/envoy-introduction/) 
+on Docker Compose, and using Styra DAS as the OPA management control plane.
 
 ## Prerequisites
 
@@ -30,26 +32,44 @@ Run OPA, Envoy and the demo web app using the `docker-compose.yaml` file provide
 docker-compose up
 ```
 
-The `app` in the `docker-compose.yaml` file is based on the [`open-policy-agent/contrib/api-authz`](https://github.com/open-policy-agent/contrib/tree/master/api_authz) example.
-
-The `envoy` instances is started with the `envoy.yaml` configuration file.
-
-The `opa` instance is started with the `opa-conf.yaml` configuration file. It will use this configuration to communicate with Styra DAS to pull configuration and bundles, and to push decision logs.
-
 ## 4. Exercise the OPA policy
 
-The `Ingress`, `Egress` and `Application` policies are pre-created in the Styra DAS Envoy system for the example application.
-
-You can review the policies within the respective policy modules in the DAS UI. No modifications to the policies are necessary for this tutorial, although this tutorial will not exercise the `Egress` policy.  The tests below will demonstrate the `Ingress` and `Application` policies only.
-
-#### Check that `alice` can see her own salary.
+Set the `SERVICE_URL` environment variable to the service’s IP/port.
 
 ```sh
-curl -i --user alice:password localhost:8000/finance/salary/alice
+export SERVICE_URL=localhost:8000
 ```
 
-This is **allowed** by both the `Ingress` policy and the `Application` policy.
+#### Create the Ingress Policy
+
+Within your Styra DAS Kuma system replace the contents of the `policy/ingress/rules.rego` file with the following:
+```rego
+package policy.ingress
+
+import input.attributes.request.http as http_request
+
+default allow = false
+
+allow {
+  http_request.method == "GET"
+  input.parsed_path = ["get"]
+}
+```
+
+**Publish** the policy to save and distribute the policy to the OPA instance.
+
+#### Check that a `GET` request to the `/get` endpoint is **Allowed** (`200 OK`).
+
+```sh
+curl -X GET $SERVICE_URL/get -i
+```
+
+#### Check that a `POST` request to the `/post` endpoint is **Denied** (`403 Forbidden`).
+
+```sh
+curl -X POST $SERVICE_URL/post -i
+```
 
 ### 5. Review the Decisions in Styra DAS
 
-OPA will evaluate each authorization query from the demo web app, and return to it the result. Based on the Styra DAS configuration, the OPA will also send a log of the decision to Styra DAS. You can view each log entry under the `System` -> `Decisions` tab.
+OPA will evaluate each authorization query invoked by the Envoy proxy, and return to it the result. The OPA will also send a log of the decision to Styra DAS. You can view each log entry under the `System` -> `Decisions` tab.

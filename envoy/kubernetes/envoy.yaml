@@ -33,7 +33,7 @@ static_resources:
                 allow_partial_message: true
               grpc_service:
                 google_grpc:
-                  target_uri: opa:9191
+                  target_uri: 127.0.0.1:9191
                   stat_prefix: ext_authz
                 timeout: 1s
           - name: envoy.filters.http.router
@@ -50,7 +50,7 @@ static_resources:
         - endpoint:
             address:
               socket_address:
-                address: app
+                address: 127.0.0.1
                 port_value: 80
 admin:
   access_log_path: "/dev/null"

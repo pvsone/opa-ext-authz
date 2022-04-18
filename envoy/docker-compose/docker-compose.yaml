@@ -1,9 +1,9 @@
 version: '3.8'
 services:
   app:
-    image: openpolicyagent/demo-test-server:v1
+    image: kennethreitz/httpbin
   envoy:
-    image: envoyproxy/envoy:v1.20.0
+    image: envoyproxy/envoy:v1.21.1
     command:
       - "envoy"
       - "--config-path"
@@ -18,9 +18,7 @@ services:
       - "run"
       - "--server"
       - "--set=plugins.envoy_ext_authz_grpc.addr=:9191"
-      - "--set=plugins.envoy_ext_authz_grpc.path=envoy/authz/allow"
       - "--set=decision_logs.console=true"
-      - "--set=status.console=true"
       - "/policy/policy.rego"
     volumes:
       - ./policy.rego:/policy/policy.rego

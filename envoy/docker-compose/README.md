@@ -1,6 +1,8 @@
 # Envoy with OPA on Docker Compose
 
-Run the [OPA Envoy Authorization](https://www.openpolicyagent.org/docs/latest/envoy-tutorial-standalone-envoy/) tutorial using Docker Compose.
+Run an OPA demo application with [Envoy](https://www.envoyproxy.io/docs/envoy/latest/intro/what_is_envoy)
+and the [OPA Envoy Plugin](https://www.openpolicyagent.org/docs/latest/envoy-introduction/) 
+on Docker Compose.
 
 ## Prerequisites
 
@@ -24,4 +26,14 @@ Set the `SERVICE_URL` environment variable to the service’s IP/port.
 export SERVICE_URL=localhost:8000
 ```
 
-Follow the instructions provided at https://www.openpolicyagent.org/docs/latest/envoy-tutorial-standalone-envoy/#7-exercise-the-opa-policy.
+#### Check that a `GET` request to the `/get` endpoint is **Allowed** (`200 OK`).
+
+```sh
+curl -X GET $SERVICE_URL/get -i
+```
+
+#### Check that a `POST` request to the `/post` endpoint is **Denied** (`403 Forbidden`).
+
+```sh
+curl -X POST $SERVICE_URL/post -i
+```
