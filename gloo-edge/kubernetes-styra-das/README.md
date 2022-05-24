@@ -7,7 +7,7 @@ using Styra DAS as the OPA management control plane.
 
 A Kubernetes cluster with Gloo Edge Gateway [installed](https://docs.solo.io/gloo-edge/latest/installation/gateway/kubernetes/)
 
-_This tutorial has been tested with Gloo Edge 1.9.0_
+_This tutorial has been tested with Gloo Edge 1.11.12_
 
 ## Steps
 
@@ -58,7 +58,7 @@ kubectl patch settings default --patch-file gloo-settings-patch.yaml --type merg
 
 #### Create the Ingress Policy
 
-Within your Styra DAS Kuma system replace the contents of the `policy/ingress/rules.rego` file with the following:
+Within your Styra DAS system replace the contents of the `policy/ingress/rules.rego` file with the following:
 ```rego
 package policy.ingress
 
@@ -77,13 +77,13 @@ allow {
 #### Check that a `GET` request to the `/get` endpoint is **Allowed** (`200 OK`).
 
 ```sh
-curl -X GET $(glooctl proxy url)/get -i
+curl -X GET $(glooctl proxy url --local-cluster)/get -i
 ```
 
 #### Check that a `POST` request to the `/post` endpoint is **Denied** (`403 Forbidden`).
 
 ```sh
-curl -X POST $(glooctl proxy url)/post -i
+curl -X POST $(glooctl proxy url --local-cluster)/post -i
 ```
 
 ### 8. Review the Decisions in Styra DAS
