@@ -1,6 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: example-app
+  namespace: kmesh-opa-demo
+  annotations:
+    8080.service.kuma.io/protocol: "http"
+spec:
+  ports:
+  - name: http
+    port: 8080
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: example-app
+  type: NodePort
 ---
-kind: Deployment
 apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: example-app
   namespace: kmesh-opa-demo
@@ -20,21 +36,4 @@ spec:
         - name: app
           image: kennethreitz/httpbin:latest
           ports:
-            - containerPort: 80
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: example-app-service
-  namespace: kmesh-opa-demo
-  annotations:
-    8080.service.kuma.io/protocol: "http"
-spec:
-  ports:
-  - name: http
-    port: 8080
-    protocol: TCP
-    targetPort: 80
-  selector:
-    app: example-app
-  type: NodePort
+          - containerPort: 80

@@ -40,7 +40,7 @@ Set the `SERVICE_URL` environment variable to the service’s IP/port.
 
 **minikube:**
 ```sh
-export SERVICE_PORT=$(kubectl -n kmesh-opa-demo get service example-app-service -o jsonpath='{.spec.ports[?(@.port==8080)].nodePort}')
+export SERVICE_PORT=$(kubectl -n kmesh-opa-demo get service example-app -o jsonpath='{.spec.ports[?(@.port==8080)].nodePort}')
 export SERVICE_HOST=$(minikube ip)
 export SERVICE_URL=$SERVICE_HOST:$SERVICE_PORT
 echo $SERVICE_URL

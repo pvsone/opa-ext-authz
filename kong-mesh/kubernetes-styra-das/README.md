@@ -63,7 +63,7 @@ Set the `SERVICE_URL` environment variable to the service’s IP/port.
 
 **minikube:**
 ```sh
-export SERVICE_PORT=$(kubectl -n kmesh-opa-demo get service example-app-service -o jsonpath='{.spec.ports[?(@.port==8080)].nodePort}')
+export SERVICE_PORT=$(kubectl -n kmesh-opa-demo get service example-app -o jsonpath='{.spec.ports[?(@.port==8080)].nodePort}')
 export SERVICE_HOST=$(minikube ip)
 export SERVICE_URL=$SERVICE_HOST:$SERVICE_PORT
 echo $SERVICE_URL
@@ -103,5 +103,5 @@ curl -X POST $SERVICE_URL/post -i
 
 ### 7. Review the Decisions in Styra DAS
 
-OPA will evaluate each authorization query invoked by the Kuma sidecar, and return to it the result. The OPA will also send a log of the decision to Styra DAS. You can view each log entry under the `System` -> `Decisions` tab.
+OPA will evaluate each authorization query invoked by the Kong Mesh sidecar, and return to it the result. The OPA will also send a log of the decision to Styra DAS. You can view each log entry under the `System` -> `Decisions` tab.
 
